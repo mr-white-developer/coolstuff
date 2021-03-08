@@ -1,4 +1,4 @@
-package com.cs.os.controller;
+package com.cs.jupiter.controller;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

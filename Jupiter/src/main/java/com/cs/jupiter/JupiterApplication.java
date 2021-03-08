@@ -1,4 +1,4 @@
-package com.cs.os;
+package com.cs.jupiter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

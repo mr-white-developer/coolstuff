@@ -1,4 +1,4 @@
-package com.cs.os;
+package com.cs.jupiter;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

@@ -1,4 +1,4 @@
-package com.cs.os.model.table;
+package com.cs.jupiter.model.table;
 
 import java.util.Date;
 
