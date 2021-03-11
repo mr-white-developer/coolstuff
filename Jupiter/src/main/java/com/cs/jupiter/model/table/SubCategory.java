@@ -2,15 +2,15 @@ package com.cs.jupiter.model.table;
 
 import java.util.Date;
 
-public class Brand {
+public class SubCategory {
+
 	private Long id;
 	private String code;
 	private String name;
 	private int status;
 	private Date cdate;
-	private Date mdate;
-	private Long fk_brandowner;
-	
+	private Date mdate;	
+	private Long fkCategory;
 	
 	public Long getId() {
 		return id;
@@ -48,14 +48,10 @@ public class Brand {
 	public void setMdate(Date mdate) {
 		this.mdate = mdate;
 	}
-	public Long getFk_brandowner() {
-		return fk_brandowner;
+	public Long getFkCategory() {
+		return fkCategory;
 	}
-	public void setFk_brandowner(Long fk_brandowner) {
-		this.fk_brandowner = fk_brandowner;
+	public void setFkCategory(Long fkCategory) {
+		this.fkCategory = fkCategory;
 	}
-	
-	
-	
-	
 }

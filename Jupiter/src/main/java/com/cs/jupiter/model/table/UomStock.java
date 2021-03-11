@@ -2,15 +2,18 @@ package com.cs.jupiter.model.table;
 
 import java.util.Date;
 
-public class Brand {
+public class UomStock {
+
 	private Long id;
 	private String code;
 	private String name;
 	private int status;
 	private Date cdate;
 	private Date mdate;
-	private Long fk_brandowner;
-	
+	private double specficPrice;
+	private Long fkStock;
+	private Long fkUom;
+	private Long fkPriceType;
 	
 	public Long getId() {
 		return id;
@@ -48,14 +51,30 @@ public class Brand {
 	public void setMdate(Date mdate) {
 		this.mdate = mdate;
 	}
-	public Long getFk_brandowner() {
-		return fk_brandowner;
+	public double getSpecficPrice() {
+		return specficPrice;
 	}
-	public void setFk_brandowner(Long fk_brandowner) {
-		this.fk_brandowner = fk_brandowner;
+	public void setSpecficPrice(double specficPrice) {
+		this.specficPrice = specficPrice;
 	}
-	
-	
+	public Long getFkStock() {
+		return fkStock;
+	}
+	public void setFkStock(Long fkStock) {
+		this.fkStock = fkStock;
+	}
+	public Long getFkUom() {
+		return fkUom;
+	}
+	public void setFkUom(Long fkUom) {
+		this.fkUom = fkUom;
+	}
+	public Long getFkPriceType() {
+		return fkPriceType;
+	}
+	public void setFkPriceType(Long fkPriceType) {
+		this.fkPriceType = fkPriceType;
+	}
 	
 	
 }

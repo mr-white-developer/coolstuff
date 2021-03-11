@@ -18,5 +18,14 @@ public class ViewResult <T>{
 		this.status = ComEnum.ErrorStatus.NA.getCode();
 	
 	}
+
+	public ViewResult(List<T> list, T data, String message, int status) {
+		super();
+		this.list = list;
+		this.data = data;
+		this.message = message;
+		this.status = status;
+	}
+	
 	
 }
