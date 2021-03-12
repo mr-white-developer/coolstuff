@@ -14,15 +14,15 @@ import com.cs.jupiter.model.data.RequestCredential;
 import com.cs.jupiter.model.data.ViewResult;
 
 @RestController
-@RequestMapping("/stock-setup")
-public class StockController extends RequestController{
-	
-	@GetMapping(value = "/get-stocks")
-	public ViewResult<RequestCredential> getStocks(){
+@RequestMapping("/brand-setup")
+public class BrandController {
+
+	@GetMapping(value = "/get-brands")
+	public ViewResult<RequestCredential> getBrand(){
 		return null;
 	}
-	@PostMapping(value = "/save-stocks")
-	public ViewResult<RequestCredential> saveStocks(
+	@PostMapping(value = "/save-brands")
+	public ViewResult<RequestCredential> saveBrand(
 			@RequestBody Map<String,Object> data,
 			HttpServletRequest req){
 		return null;

@@ -29,7 +29,7 @@ public class WebReqFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest) request;
 		String token = req.getHeader(authen.TOKEN_NAME);
-		if (!token.equals("")) {
+		if (!token.equals("") && token != null) {
 			RequestCredential cred = authen.readToken(token, resp);
 
 			if (resp.getStatus() == 200) {

@@ -26,12 +26,12 @@ public class Main extends RequestController{
 
 	@GetMapping(value = "/get-token")
 	public ViewResult<RequestCredential> getStocks(HttpServletRequest req,HttpServletResponse resp){
-		return new ViewResult<RequestCredential>(null,getReqHeader(req,resp),"ok",200) ;
+		return new ViewResult<RequestCredential>() ;
 	}
 	@GetMapping(value = "/check-token")
 	public ViewResult<RequestCredential> checkToken(
 			HttpServletRequest req,HttpServletResponse resp){
-		return new ViewResult<RequestCredential>(null,getReqHeader(req,resp),"ok",200) ;
+		return new ViewResult<RequestCredential>() ;
 	}
 
 	

@@ -10,6 +10,10 @@ public class BrandOwner {
 	private Date cdate;
 	private Date mdate;	
 	
+	public BrandOwner(){
+		
+	}
+	
 	public Long getId() {
 		return id;
 	}

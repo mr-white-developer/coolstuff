@@ -21,4 +21,5 @@ public class Utlity {
 	public static String getCurrentDateTime(){
 		return dateFormat.format(new Date());
 	}
+
 }
