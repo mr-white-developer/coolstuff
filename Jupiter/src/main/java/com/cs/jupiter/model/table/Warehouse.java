@@ -4,17 +4,17 @@ import java.util.Date;
 
 public class Warehouse {
 
-	private Long id;
+	private String id;
 	private String code;
 	private String name;
 	private int status;
 	private Date cdate;
 	private Date mdate;	
 	
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getCode() {

@@ -4,21 +4,29 @@ import java.util.Date;
 
 public class UomStock {
 
-	private Long id;
+	private int rowNumber;
+	private String id;
 	private String code;
 	private String name;
 	private int status;
 	private Date cdate;
 	private Date mdate;
 	private double specficPrice;
-	private Long fkStock;
-	private Long fkUom;
-	private Long fkPriceType;
-	
-	public Long getId() {
+	private String fkStock;
+	private String fkUom;
+	private String fkPriceType;
+	private Stock stock;
+	private Uom uom;
+	public int getRowNumber() {
+		return rowNumber;
+	}
+	public void setRowNumber(int rowNumber) {
+		this.rowNumber = rowNumber;
+	}
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getCode() {
@@ -57,24 +65,37 @@ public class UomStock {
 	public void setSpecficPrice(double specficPrice) {
 		this.specficPrice = specficPrice;
 	}
-	public Long getFkStock() {
+	public String getFkStock() {
 		return fkStock;
 	}
-	public void setFkStock(Long fkStock) {
+	public void setFkStock(String fkStock) {
 		this.fkStock = fkStock;
 	}
-	public Long getFkUom() {
+	public String getFkUom() {
 		return fkUom;
 	}
-	public void setFkUom(Long fkUom) {
+	public void setFkUom(String fkUom) {
 		this.fkUom = fkUom;
 	}
-	public Long getFkPriceType() {
+	public String getFkPriceType() {
 		return fkPriceType;
 	}
-	public void setFkPriceType(Long fkPriceType) {
+	public void setFkPriceType(String fkPriceType) {
 		this.fkPriceType = fkPriceType;
 	}
+	public Stock getStock() {
+		return stock;
+	}
+	public Uom getUom() {
+		return uom;
+	}
+	public void setStock(Stock stock) {
+		this.stock = stock;
+	}
+	public void setUom(Uom uom) {
+		this.uom = uom;
+	}
+	
 	
 	
 }

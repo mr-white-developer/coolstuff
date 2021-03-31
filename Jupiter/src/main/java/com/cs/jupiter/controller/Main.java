@@ -1,21 +1,19 @@
 package com.cs.jupiter.controller;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cs.jupiter.model.data.RequestCredential;
+import com.cs.jupiter.model.data.ViewCredential;
 import com.cs.jupiter.model.data.ViewResult;
 import com.cs.jupiter.utility.Authentication;
-import com.cs.jupiter.utility.Utlity;
+import com.cs.jupiter.utility.KeyFactory;
 
 @RestController
 @RequestMapping("/main")
@@ -33,6 +31,15 @@ public class Main extends RequestController{
 			HttpServletRequest req,HttpServletResponse resp){
 		return new ViewResult<RequestCredential>() ;
 	}
+	@GetMapping(value = "/test")
+	public ViewCredential test(
+			HttpServletRequest req,HttpServletResponse resp){
+		
+		ViewCredential v = new ViewCredential();
+		v.setN1(Long.toString(KeyFactory.getId()));
+		return v;
+	}
+
 
 	
 }

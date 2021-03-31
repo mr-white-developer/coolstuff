@@ -4,18 +4,25 @@ import java.util.Date;
 
 public class SubCategory {
 
-	private Long id;
+	private int rowNumber;
+	private String id;
 	private String code;
 	private String name;
 	private int status;
 	private Date cdate;
-	private Date mdate;	
+	private Date mdate;
 	private Long fkCategory;
-	
-	public Long getId() {
+	private Category category;
+	public int getRowNumber() {
+		return rowNumber;
+	}
+	public void setRowNumber(int rowNumber) {
+		this.rowNumber = rowNumber;
+	}
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getCode() {
@@ -54,4 +61,12 @@ public class SubCategory {
 	public void setFkCategory(Long fkCategory) {
 		this.fkCategory = fkCategory;
 	}
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	
+	
 }

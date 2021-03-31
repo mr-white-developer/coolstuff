@@ -1,7 +1,6 @@
 package com.cs.jupiter.model.data;
 
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 
 public class ViewResult <T>{
@@ -9,7 +8,5 @@ public class ViewResult <T>{
 	public T data;
 	public String message;
 	public int status;
-	
-	
-	
+	public int totalItem = 0;
 }

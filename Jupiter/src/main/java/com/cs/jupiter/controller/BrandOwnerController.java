@@ -25,6 +25,6 @@ public class BrandOwnerController extends RequestController{
 	public ViewResult<BrandOwner> saveBrand(
 			@RequestBody BrandOwner data,
 			HttpServletRequest req,HttpServletResponse resp){
-		return boService.save(data, null, getReqHeader(req, resp));
+		return boService.save(data, getReqHeader(req, resp));
 	}
 }

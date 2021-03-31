@@ -6,35 +6,50 @@ import com.cs.jupiter.utility.ComEnum;
 
 public class Stock {
 
-	private Long id;
+	private int rowNumber;
+	private String id;
 	private String code;
 	private String name;
 	private int status;
 	private Date cdate;
 	private Date mdate;
-	private Long fkCategory;
-	private Long fkSubCategory;
-	private Long fkPackType;
-	private Long fkBrand;
+	private String fkCategory;
+	private Category category;
+	private String fkSubCategory;
+	private SubCategory subCategory;
+	private String fkPackType;
+	private String fkBrand;
+	private Brand brand;
 	
 	public Stock(){
-		this.id = (long) 0;
+		this.id = "-1";
 		this.code = "";
 		this.name = "";
 		this.status = ComEnum.RowStatus.Normal.getCode();
 		this.cdate = new Date();
 		this.mdate = new Date();
-		this.fkCategory = (long) 0;
-		this.fkSubCategory =  (long) 0;
-		this.fkPackType = (long) 0;
-		this.fkBrand = (long) 0;
+		this.fkCategory = "-1";
+		this.fkSubCategory =  "-1";
+		this.fkPackType = "-1";
+		this.fkBrand = "-1";
+		this.category = new Category();
+		this.subCategory = new SubCategory();
+		this.brand = new Brand();
 	}
 
-	public Long getId() {
+	public int getRowNumber() {
+		return rowNumber;
+	}
+
+	public void setRowNumber(int rowNumber) {
+		this.rowNumber = rowNumber;
+	}
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -78,36 +93,60 @@ public class Stock {
 		this.mdate = mdate;
 	}
 
-	public Long getFkCategory() {
+	public String getFkCategory() {
 		return fkCategory;
 	}
 
-	public void setFkCategory(Long fkCategory) {
+	public void setFkCategory(String fkCategory) {
 		this.fkCategory = fkCategory;
 	}
 
-	public Long getFkSubCategory() {
+	public String getFkSubCategory() {
 		return fkSubCategory;
 	}
 
-	public void setFkSubCategory(Long fkSubCategory) {
+	public void setFkSubCategory(String fkSubCategory) {
 		this.fkSubCategory = fkSubCategory;
 	}
 
-	public Long getFkPackType() {
+	public String getFkPackType() {
 		return fkPackType;
 	}
 
-	public void setFkPackType(Long fkPackType) {
+	public void setFkPackType(String fkPackType) {
 		this.fkPackType = fkPackType;
 	}
 
-	public Long getFkBrand() {
+	public String getFkBrand() {
 		return fkBrand;
 	}
 
-	public void setFkBrand(Long fkBrand) {
+	public void setFkBrand(String fkBrand) {
 		this.fkBrand = fkBrand;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public SubCategory getSubCategory() {
+		return subCategory;
+	}
+
+	public void setSubCategory(SubCategory subCategory) {
+		this.subCategory = subCategory;
+	}
+
+	public Brand getBrand() {
+		return brand;
+	}
+
+	public void setBrand(Brand brand) {
+		this.brand = brand;
 	}
 
 	
