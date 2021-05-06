@@ -1,88 +1,42 @@
 package com.cs.jupiter.model.table;
 
-import java.util.Date;
+import com.cs.jupiter.model.data.ViewCredential;
 
-public class UomStock {
+public class UomStock extends ViewCredential{
 
 	private int rowNumber;
-	private String id;
-	private String code;
-	private String name;
-	private int status;
-	private Date cdate;
-	private Date mdate;
-	private double specficPrice;
-	private String fkStock;
-	private String fkUom;
-	private String fkPriceType;
+	private double specficPrice;	
+	private int base;
+	private PriceType priceType;
 	private Stock stock;
 	private Uom uom;
+	private int ratio;
+	private Currency currency;
+	private double price;
+	private double rate;
+	
+	public UomStock(){
+		this.specficPrice = 0.0;
+		this.base = -1;
+		this.ratio = 0;
+		this.price = 0.0;
+		this.rate = 0.0;
+	}
+	
 	public int getRowNumber() {
 		return rowNumber;
 	}
 	public void setRowNumber(int rowNumber) {
 		this.rowNumber = rowNumber;
 	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getCode() {
-		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getStatus() {
-		return status;
-	}
-	public void setStatus(int status) {
-		this.status = status;
-	}
-	public Date getCdate() {
-		return cdate;
-	}
-	public void setCdate(Date cdate) {
-		this.cdate = cdate;
-	}
-	public Date getMdate() {
-		return mdate;
-	}
-	public void setMdate(Date mdate) {
-		this.mdate = mdate;
-	}
+	
 	public double getSpecficPrice() {
 		return specficPrice;
 	}
 	public void setSpecficPrice(double specficPrice) {
 		this.specficPrice = specficPrice;
 	}
-	public String getFkStock() {
-		return fkStock;
-	}
-	public void setFkStock(String fkStock) {
-		this.fkStock = fkStock;
-	}
-	public String getFkUom() {
-		return fkUom;
-	}
-	public void setFkUom(String fkUom) {
-		this.fkUom = fkUom;
-	}
-	public String getFkPriceType() {
-		return fkPriceType;
-	}
-	public void setFkPriceType(String fkPriceType) {
-		this.fkPriceType = fkPriceType;
-	}
+
 	public Stock getStock() {
 		return stock;
 	}
@@ -95,7 +49,52 @@ public class UomStock {
 	public void setUom(Uom uom) {
 		this.uom = uom;
 	}
-	
+	public PriceType getPriceType() {
+		return priceType;
+	}
+	public void setPriceType(PriceType priceType) {
+		this.priceType = priceType;
+	}
+
+	public int getBase() {
+		return base;
+	}
+
+	public void setBase(int base) {
+		this.base = base;
+	}
+
+	public int getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(int ratio) {
+		this.ratio = ratio;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public double getRate() {
+		return rate;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public void setRate(double rate) {
+		this.rate = rate;
+	}
 	
 	
 }

@@ -1,50 +1,28 @@
 package com.cs.jupiter.model.table;
 
-import java.util.Date;
 
-public class Warehouse {
+import com.cs.jupiter.model.data.ViewCredential;
 
-	private String id;
-	private String code;
-	private String name;
-	private int status;
-	private Date cdate;
-	private Date mdate;	
+public class Warehouse extends ViewCredential{
+	private int rowNumber;
+	private Company company;
 	
-	public String getId() {
-		return id;
+	public Warehouse(){
+		this.rowNumber = 0;
 	}
-	public void setId(String id) {
-		this.id = id;
+	
+	public Company getCompany() {
+		return company;
 	}
-	public String getCode() {
-		return code;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
-	public void setCode(String code) {
-		this.code = code;
+
+	public int getRowNumber() {
+		return rowNumber;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getStatus() {
-		return status;
-	}
-	public void setStatus(int status) {
-		this.status = status;
-	}
-	public Date getCdate() {
-		return cdate;
-	}
-	public void setCdate(Date cdate) {
-		this.cdate = cdate;
-	}
-	public Date getMdate() {
-		return mdate;
-	}
-	public void setMdate(Date mdate) {
-		this.mdate = mdate;
+
+	public void setRowNumber(int rowNumber) {
+		this.rowNumber = rowNumber;
 	}
 }

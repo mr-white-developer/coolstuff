@@ -1,9 +1,20 @@
 package com.cs.jupiter.model.data;
 
+import java.util.Date;
+
 public class ViewCredential {
 
 	private int currentRow = -1;
 	private int maxRowsPerPage = -1;
+	private String orderby = "";
+	private String sorting = "";
+	
+	private String id;
+	private String code;
+	private String name;
+	private int status;
+	private Date cdate;
+	private Date mdate;
 	
 	private String n1;
 	private String n2;
@@ -22,6 +33,11 @@ public class ViewCredential {
 	private String t4;
 	private String t5;
 	private String t6;
+	private String t7;
+	private String t8;
+	private String t9;
+	private String t10;
+	
 	
 	private int s1;
 	private int s2;
@@ -33,6 +49,11 @@ public class ViewCredential {
 	private boolean b2;
 	
 	public ViewCredential(){
+		this.id = "-1";
+		this.code = "";
+		this.name = "";
+		this.status = -1;
+		
 		this.n1 = "-1";
 		this.n2 = "-1";
 		this.n3 = "-1";
@@ -49,6 +70,10 @@ public class ViewCredential {
 		this.t4 = "";
 		this.t5 = "";
 		this.t6 = "";
+		this.t7 = "";
+		this.t8 = "";
+		this.t9 = "";
+		this.t10 = "";
 		
 		this.s1 = -1;
 		this.s2 = -1;
@@ -212,6 +237,102 @@ public class ViewCredential {
 
 	public void setN1(String n1) {
 		this.n1 = n1;
+	}
+
+	public String getOrderby() {
+		return orderby;
+	}
+
+	public String getSorting() {
+		return sorting;
+	}
+
+	public void setOrderby(String orderby) {
+		this.orderby = orderby;
+	}
+
+	public void setSorting(String sorting) {
+		this.sorting = sorting;
+	}
+
+	public String getT7() {
+		return t7;
+	}
+
+	public String getT8() {
+		return t8;
+	}
+
+	public String getT9() {
+		return t9;
+	}
+
+	public String getT10() {
+		return t10;
+	}
+
+	public void setT7(String t7) {
+		this.t7 = t7;
+	}
+
+	public void setT8(String t8) {
+		this.t8 = t8;
+	}
+
+	public void setT9(String t9) {
+		this.t9 = t9;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public Date getCdate() {
+		return cdate;
+	}
+
+	public Date getMdate() {
+		return mdate;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public void setCdate(Date cdate) {
+		this.cdate = cdate;
+	}
+
+	public void setMdate(Date mdate) {
+		this.mdate = mdate;
+	}
+
+	public void setT10(String t10) {
+		this.t10 = t10;
 	}
 	
 }

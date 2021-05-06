@@ -1,40 +1,33 @@
 package com.cs.jupiter.model.table;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.cs.jupiter.utility.ComEnum;
+import com.cs.jupiter.model.data.ViewCredential;
 
-public class Stock {
+public class Stock extends ViewCredential{
 
 	private int rowNumber;
-	private String id;
-	private String code;
-	private String name;
-	private int status;
-	private Date cdate;
-	private Date mdate;
-	private String fkCategory;
 	private Category category;
-	private String fkSubCategory;
 	private SubCategory subCategory;
-	private String fkPackType;
-	private String fkBrand;
 	private Brand brand;
 	
+
+	private PackType packType;
+	private PackSize packSize;
+	private List<StockHolding> stockHoldings;
+	private List<UomStock> uomStocks;
+	
 	public Stock(){
-		this.id = "-1";
-		this.code = "";
-		this.name = "";
-		this.status = ComEnum.RowStatus.Normal.getCode();
-		this.cdate = new Date();
-		this.mdate = new Date();
-		this.fkCategory = "-1";
-		this.fkSubCategory =  "-1";
-		this.fkPackType = "-1";
-		this.fkBrand = "-1";
-		this.category = new Category();
-		this.subCategory = new SubCategory();
-		this.brand = new Brand();
+		super();
+		this.stockHoldings = new ArrayList<>();
+		this.uomStocks = new ArrayList<>();
+	}
+	public Stock(String id){
+		super();
+		this.setId(id);
+		this.stockHoldings = new ArrayList<>();
+		this.uomStocks = new ArrayList<>();
 	}
 
 	public int getRowNumber() {
@@ -43,86 +36,6 @@ public class Stock {
 
 	public void setRowNumber(int rowNumber) {
 		this.rowNumber = rowNumber;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public Date getCdate() {
-		return cdate;
-	}
-
-	public void setCdate(Date cdate) {
-		this.cdate = cdate;
-	}
-
-	public Date getMdate() {
-		return mdate;
-	}
-
-	public void setMdate(Date mdate) {
-		this.mdate = mdate;
-	}
-
-	public String getFkCategory() {
-		return fkCategory;
-	}
-
-	public void setFkCategory(String fkCategory) {
-		this.fkCategory = fkCategory;
-	}
-
-	public String getFkSubCategory() {
-		return fkSubCategory;
-	}
-
-	public void setFkSubCategory(String fkSubCategory) {
-		this.fkSubCategory = fkSubCategory;
-	}
-
-	public String getFkPackType() {
-		return fkPackType;
-	}
-
-	public void setFkPackType(String fkPackType) {
-		this.fkPackType = fkPackType;
-	}
-
-	public String getFkBrand() {
-		return fkBrand;
-	}
-
-	public void setFkBrand(String fkBrand) {
-		this.fkBrand = fkBrand;
 	}
 
 	public Category getCategory() {
@@ -148,6 +61,40 @@ public class Stock {
 	public void setBrand(Brand brand) {
 		this.brand = brand;
 	}
+
+	public PackType getPackType() {
+		return packType;
+	}
+
+	public PackSize getPackSize() {
+		return packSize;
+	}
+
+	public void setPackType(PackType packType) {
+		this.packType = packType;
+	}
+
+	public void setPackSize(PackSize packSize) {
+		this.packSize = packSize;
+	}
+
+	public List<UomStock> getUomStocks() {
+		return uomStocks;
+	}
+
+	public void setUomStocks(List<UomStock> uomStocks) {
+		this.uomStocks = uomStocks;
+	}
+
+	public List<StockHolding> getStockHoldings() {
+		return stockHoldings;
+	}
+
+	public void setStockHoldings(List<StockHolding> stockHoldings) {
+		this.stockHoldings = stockHoldings;
+	}
+
+	
 
 	
 }
