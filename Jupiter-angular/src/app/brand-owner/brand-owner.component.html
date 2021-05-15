@@ -1,0 +1,116 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between align-middle">
+        <h1 class="ms-3 align-middle page-title" >BrandOwner</h1>
+
+        <div class="d-grid gap-2 d-md-flex" role="group">
+            <button class="btn btn-sm btn-light" routerLink="/brand-owner-list"><i class="fa fa-arrow-left"></i>
+                Back</button>
+            <button id="btn-bo-save" class="btn btn-sm btn-light" type="button" (click)="submit()"
+                *ngIf="roles.button.save">
+                <i class="fa fa-check"></i>
+                <span class="ms-1"> Save</span>
+            </button>
+
+            <button id="btn-bo-delete" class="btn btn-sm  btn-light" type="button" *ngIf="roles.button.delete"
+                (click)="delete()">
+                <i class="fa fa-trash"></i>
+                <span class="ms-1"> Delete</span>
+            </button>
+            <div id="btn-bo-edit" class="form-check mt-2 align-middle" *ngIf="roles.button.edit">
+                <input class="form-check-input " type="checkbox" [(ngModel)]="edit" id="bo-cb-isedit"
+                    (change)="editOn()">
+                <label class="form-check-label" for="bo-cb-isedit">
+                    Edit
+                </label>
+            </div>
+        </div>
+    </div>
+   
+    <div class="dropdown-divider"></div>
+
+    <div class="mx-3">
+        <form [formGroup]='boForm' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">BrandOwner detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{boForm.get('bo-cdate')?.value | date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body px-0" [hidden]="!edit">
+                <div class="row g-4 mb-1">
+                    <div class="col-md position-relative">
+                        <label for="setup-bo-name" class="form-label-sm mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-bo-name" [readonly]="!edit"
+                            formControlName="bo-name">
+                        <span class="text-danger "
+                            *ngIf="!boForm.get('bo-name')?.valid && boForm.get('bo-name')?.touched">
+                            Please enter valid name
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-bo-id" class="form-label-sm mb-1">Id</label>
+                        <input type="text" class="form-control form-control-sm" id="etup-bo-id" [readonly]="!edit"
+                            formControlName="bo-id">
+                        <span class="text-danger " *ngIf="!boForm.get('bo-id')?.valid && boForm.get('bo-id')?.touched">
+                            Please enter valid id (*****)
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-bo-email" class="form-label-sm mb-1">Email</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-bo-email" readonly
+                            formControlName="bo-email">
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-bo-ph" class="form-label-sm mb-1">Phone</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-bo-ph" readonly
+                            formControlName="bo-phone">
+                    </div>
+
+                </div>
+                <div class="row g-1 mt-1">
+                    <div class="col-md position-relative">
+                        <label for="setup-bo-address" class="form-label-sm mb-1">Address</label>
+                        <textarea class="form-control form-control-sm" id="setup-bo-address" readonly
+                            formControlName="bo-address"></textarea>
+                    </div>
+                </div>
+                <div class="row g-1 mt-1">
+                    <div class="col-md position-relative form-check">
+                        <input type="checkbox" class="form-check-input" id="setup-bo-status"
+                            [formControlName]="'bo-status'" [readonly]="!edit">
+                        <label for="setup-bo-status" class="form-check-label ">Status</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Name</div>
+                    <div class="col-sm ">{{boForm.get('bo-name')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Id</div>
+                    <div class="col-sm ">{{boForm.get('bo-id')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Email</div>
+                    <div class="col-sm ">{{boForm.get('bo-email')?.value == '' ? 'NA' : boForm.get('bo-email')?.value}}
+                    </div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Phone</div>
+                    <div class="col-sm ">{{boForm.get('bo-phone')?.value == '' ? 'NA' : boForm.get('bo-phone')?.value}}
+                    </div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Address</div>
+                    <div class="col-sm ">{{boForm.get('bo-address')?.value}}</div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>

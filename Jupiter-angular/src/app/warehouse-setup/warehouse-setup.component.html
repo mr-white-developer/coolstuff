@@ -1,0 +1,97 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between align-middle">
+        <h1 class="ms-3 page-title" >WareHouse</h1>
+        <div class="d-grid gap-2 d-md-flex" role="group">
+            <button class="btn btn-sm btn-light" routerLink="/warehouse-list"><i class="fa fa-arrow-left"></i>
+                Back</button>
+            <button id="btn-wh-save" class="btn btn-sm btn-light" type="button" (click)="submit()"
+                *ngIf="roles.button.save">
+                <i class="fa fa-check"></i>
+                <span class="ms-1"> Save</span>
+            </button>
+            <button id="btn-wh-delete" class="btn btn-sm  btn-light" type="button" *ngIf="roles.button.delete"
+                (click)="delete()">
+                <i class="fa fa-trash"></i>
+                <span class="ms-1"> Delete</span>
+            </button>
+            <div id="btn-wh-edit" class="form-check mt-2 align-middle" *ngIf="roles.button.edit">
+                <input class="form-check-input " type="checkbox" [(ngModel)]="edit" id="wh-cb-isedit"
+                    (change)="editOn()">
+                <label class="form-check-label" for="wh-cb-isedit">
+                    Edit
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="mx-3">
+        <form [formGroup]='myFormGroup' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">WareHouse detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{myFormGroup.get('wh-cdate')?.value | date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body px-0" [hidden]="!edit">
+                <div class="row g-4 mb-1">
+                    <div class="col-md position-relative">
+                        <label for="setup-wh-name" class="form-label-sm mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-wh-name" [readonly]="!edit"
+                            formControlName="wh-name">
+                        <span class="text-danger "
+                            *ngIf="!myFormGroup.get('wh-name')?.valid && myFormGroup.get('wh-name')?.touched">
+                            Please enter valid name
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-wh-id" class="form-label-sm mb-1">Id</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-wh-id" [readonly]="!edit"
+                            formControlName="wh-code">
+                        <span class="text-danger "
+                            *ngIf="!myFormGroup.get('wh-code')?.valid && myFormGroup.get('wh-code')?.touched">
+                            Please enter valid id (*****)
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="wh-setup-cmlist" class="form-label-sm mb-1">Company list</label>
+                        <select class="form-select-sm form-select" formControlName="com-id" id="wh-setup-cmlist">
+                            <option value="-1">-</option>
+                            <option [value]="com.id" *ngFor="let com of _companyList">{{com.name}}</option>
+
+                        </select>
+                        <span class="text-danger "
+                            *ngIf="!myFormGroup.get('com-id')?.valid  && myFormGroup.get('com-id')?.touched">
+                            Please select 
+                        </span>
+                    </div>
+
+
+                </div>
+                <div class="row g-1 mt-1">
+                    <div class="col-md position-relative form-check">
+                        <input type="checkbox" class="form-check-input" id="setup-wh-status"
+                            [formControlName]="'wh-status'" [readonly]="!edit">
+                        <label for="setup-wh-status" class="form-check-label ">Status</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+                
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Name</div>
+                    <div class="col-sm ">{{myFormGroup.get('wh-name')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Id</div>
+                    <div class="col-sm ">{{myFormGroup.get('wh-code')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Belongs to</div>
+                    <div class="col-sm "><a class="btn-link" style="cursor: pointer;" (click)="goChild(myFormGroup.get('com-id')?.value)">{{myFormGroup.get('com-name')?.value}}</a></div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>

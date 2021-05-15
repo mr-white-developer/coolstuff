@@ -1,0 +1,123 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-start">
+            <pagination-controls id="pc-b" (pageChange)="_pageChanged($event)"></pagination-controls>
+            <div class="clearfix" id="myspinner" >
+                <div class="spinner-border ms-2" role="status">
+                    <span class="visually-hidden"></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h1 class="page-title">Brand</h1>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-light me-2" data-bs-toggle="collapse" data-bs-target="#cri-box">
+                SearchBox
+            </button>
+            <button class="btn btn-sm btn-light" (click)="routeNew()">New</button>
+        </div>
+    </div>
+    <div class="collapse" id="cri-box">
+        <div class="px-3 pt-4 pb-2 bg-light rounded">
+            <form [formGroup]="brandForm" (ngSubmit)="search()">
+                <div class="row">
+                    <div class="col px-5">
+                        <div class="row mb-2">
+                            <label for="b-list-b-name" class="col-sm-3 col-form-label-sm">Brand Name</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control form-control-sm col-sm" id="b-list-b-name"
+                                    formControlName="b-name">
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="b-list-b-name" class="col-sm-3 col-form-label-sm">Brand Id</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="b-list-b-code" formControlName="b-code"></div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="b-list-b-status" class="col-form-label-sm col-sm-3">Brand Status</label>
+                            <div class="col-sm"> <select class="form-select form-select-sm col-sm" id="b-list-b-status"
+                                    formControlName="b-status">
+                                    <option value="-1" selected> - </option>
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select></div>
+
+                        </div>
+                    </div>
+                    <div class="col px-5">
+                        <div class="row mb-2">
+                            <label for="b-list-b-name" class="col-sm-3 col-form-label-sm">BrandOwner Name</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="b-list-bo-name" formControlName="bo-name"></div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="b-list-b-name" class="col-sm-3 col-form-label-sm">BrandOwner Id</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="b-list-bo-code" formControlName="bo-code"></div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="b-list-b-status" class="col-form-label-sm col-sm-3">BrandOwner Status</label>
+                            <div class="col-sm">
+                                 <select class="form-select form-select-sm col-sm" id="b-list-bo-status"
+                                    formControlName="bo-status">
+                                    <option value="-1" selected> - </option>
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row ">
+                    <div class="col d-flex justify-content-end">
+                        <button class="btn btn-sm btn-light" (click)="searchUndo()">
+                            <i class="fa fa-undo"></i>
+                        </button>
+                        <button class="btn btn-sm btn-light" type="submit">
+                            <i class="fa fa-search"></i>
+
+                        </button>
+                    </div>
+                </div>
+                <!-- <div class="dropdown-divider"></div> -->
+            </form>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 10px;">No</th>
+                <th scope="col" style="width: 18%;">Brand Name</th>
+                <th scope="col" style="width: 18%;">Brand Id</th>
+                <th scope="col" style="width: 18%">BrandOwner Name</th>
+                <th scope="col" style="width: 18%;">Created Date</th>
+                <th scope="col" style="width: 18%;">Active?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let b of _brandList | paginate:pg_config;" (click)="showDetail(b.id)">
+                <th scope="row">{{b.rowNumber}}</th>
+                <td>{{b.name}}</td>
+                <td>{{b.code}}</td>
+                <td>{{b.brandOwner.name}}</td>
+                <td>{{b.cdate}}</td>
+                <td>
+                    <i class="fa fa-dot-circle text-success" *ngIf="b.status==1"></i>
+                    <i class="fa fa-dot-circle text-muted" *ngIf="b.status==2"></i>
+                    <i class="fa fa-dot-circle text-danger" *ngIf="b.status==4"></i>
+                </td>
+            </tr>
+            <tr *ngIf="_brandList.length == 0">
+                <th scope="row" colspan="6" class="text-muted" style="text-align: center;"> Oops !</th>
+            </tr>
+        </tbody>
+    </table>
+</div>

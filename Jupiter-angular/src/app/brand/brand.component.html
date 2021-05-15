@@ -1,0 +1,95 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between align-middle">
+
+        <h1 class="ms-3 page-title" >Brand</h1>
+        <div class="d-grid gap-2 d-md-flex" role="group"><button class="btn btn-sm btn-light"
+                routerLink="/brand-list"><i class="fa fa-arrow-left"></i>
+                Back</button>
+            <button id="btn-b-save" class="btn btn-sm btn-light" type="button" (click)="submit()"
+                *ngIf="roles.button.save">
+                <i class="fa fa-check"></i>
+                <span class="ms-1"> Save</span>
+            </button>
+            <button id="btn-b-delete" class="btn btn-sm  btn-light" type="button" *ngIf="roles.button.delete"
+                (click)="delete()">
+                <i class="fa fa-trash"></i>
+                <span class="ms-1"> Delete</span>
+            </button>
+            <div id="btn-b-edit" class="form-check mt-2 align-middle" *ngIf="roles.button.edit">
+                <input class="form-check-input " type="checkbox" [(ngModel)]="edit" id="b-cb-isedit"
+                    (change)="editOn()">
+                <label class="form-check-label" for="b-cb-isedit">
+                    Edit
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="mx-3">
+        <form [formGroup]='boForm' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">Brand detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{boForm.get('b-cdate')?.value | date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body px-0" [hidden]="!edit">
+                <div class="row g-4 mb-1">
+                    <div class="col-md position-relative">
+                        <label for="setup-b-name" class="form-label-sm mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-b-name" [readonly]="!edit"
+                            formControlName="b-name">
+                        <span class="text-danger "
+                            *ngIf="!boForm.get('b-name')?.valid && boForm.get('b-name')?.touched">
+                            Please enter valid name
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-b-id" class="form-label-sm mb-1">Id</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-b-id" [readonly]="!edit"
+                            formControlName="b-code">
+                        <span class="text-danger "
+                            *ngIf="!boForm.get('b-code')?.valid && boForm.get('b-code')?.touched">
+                            Please enter valid id (*****)
+                        </span>
+                    </div>
+
+                    <div class="col-md position-relative">
+                        <label for="setup-b-id" class="form-label-sm mb-1">BrandOwner</label>
+                        <select class="form-select-sm form-select" formControlName="bo-uid">
+                            <option value="-1">-</option>
+                            <option *ngFor="let brandowner of _brandOwnerList" [value]="brandowner.id">
+                                {{brandowner.name}}</option>
+
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="row g-1 mt-1">
+                    <div class="col-md position-relative form-check">
+                        <input type="checkbox" class="form-check-input" id="setup-b-status" formControlName="b-status"
+                            [readonly]="!edit">
+                        <label for="setup-b-status" class="form-check-label ">Active</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+
+
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Name</div>
+                    <div class="col-sm ">{{boForm.get('b-name')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Id</div>
+                    <div class="col-sm ">{{boForm.get('b-code')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">BrandOwner Name</div>
+                    <div class="col-sm ">{{boForm.get('bo-name')?.value}}</div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

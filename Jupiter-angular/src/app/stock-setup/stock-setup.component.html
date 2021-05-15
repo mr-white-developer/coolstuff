@@ -1,0 +1,476 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between align-middle">
+        <h1 class="ms-3 align-middle page-title">Stock</h1>
+        <div class="d-grid gap-2 d-md-flex" role="group">
+            <button class="btn btn-sm btn-light" routerLink="/stock-list"><i class="fa fa-arrow-left"></i>
+                Back</button>
+            <button id="btn-stock-save" class="btn btn-sm btn-light" type="button" (click)="submit()"
+                *ngIf="roles.button.save">
+                <i class="fa fa-check"></i>
+                <span class="ms-1"> Save</span>
+            </button>
+
+            <button id="btn-stock-delete" class="btn btn-sm  btn-light" type="button" *ngIf="roles.button.delete"
+                (click)="delete()">
+                <i class="fa fa-trash"></i>
+                <span class="ms-1"> Delete</span>
+            </button>
+            <div id="btn-stock-edit" class="form-check mt-2 align-middle" *ngIf="roles.button.edit">
+                <input class="form-check-input " type="checkbox" [(ngModel)]="edit" id="stock-cb-isedit"
+                    (change)="editOn()">
+                <label class="form-check-label" for="stock-cb-isedit">
+                    Edit
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="mx-3">
+        <form [formGroup]='myForm' class="card border-0">
+
+
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">Stock detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{myForm.get('stock-cdate')?.value | date:'longDate'}}</span>
+                </div>
+            </div>
+
+            <div class="card-body" [hidden]="!edit">
+                <div class="row g-2 mb-3">
+                    <div class="col-md position-relative">
+                        <label for="setup-stock-name" class="form-label-sm mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-stock-name" [readonly]="!edit"
+                            formControlName="stock-name">
+                        <span class="text-danger "
+                            *ngIf="!myForm.get('stock-name')?.valid && myForm.get('stock-name')?.touched">
+                            Please enter valid name
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-stock-id" class="form-label-sm mb-1">Id</label>
+                        <input type="text" class="form-control form-control-sm" id="etup-stock-id" [readonly]="!edit"
+                            formControlName="stock-code">
+                        <span class="text-danger "
+                            *ngIf="!myForm.get('stock-code')?.valid && myForm.get('stock-code')?.touched">
+                            Please enter valid id (*****)
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md position-relative">
+                        <label class="form-label-sm mb-1" for="brandowner-radiogroup">Manufactured by</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">BrandOwner</span>
+                            <input type="text" class="form-control form-control-sm" placeholder="Select"
+                                [value]="myForm.get('brand-owner')?.value == undefined ? '' : myForm.get('brand-owner')?.value.name"
+                                readonly data-bs-toggle="collapse"
+                                data-bs-target="#brandowner-list-box">
+                            <span class="input-group-text">Brand</span>
+                            <input type="text" class="form-control form-control-sm" readonly placeholder="Select"
+                                [value]="myForm.get('brand')?.value == undefined ? '' : myForm.get('brand')?.value.name">
+                            <span class="input-group-text dropdown-toggle list-hover" data-bs-toggle="collapse"
+                                data-bs-target="#brandowner-list-box"></span>
+                        </div>
+
+
+                        <div class="collapse" id="brandowner-list-box">
+                            <div class="card-body card mt-2">
+
+                                <ul style="list-style: none;">
+                                    <li *ngFor="let bo of myForm.get('brandowner-list')?.value">
+                                        <div class="form-check">
+                                            <label class="form-check-label" [for]="bo.id">{{bo.name}}</label>
+                                            <input class="form-check-input" type="radio" name="brand-owner" [id]="bo.id"
+                                                [value]="bo" formControlName="brand-owner"
+                                                [checked]="bo.id == myForm.get('brand-owner')?.value.id">
+                                        </div>
+                                        <ul style="list-style: none;"
+                                            [hidden]="myForm.get('brand-owner')?.value.id !== bo.id">
+                                            <li *ngFor="let b of bo.brandList">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" [for]="b.id">{{b.name}}</label>
+                                                    <input class="form-check-input" type="radio" name="brand"
+                                                        [id]="b.id" [value]="b" formControlName="brand"
+                                                        [checked]="b.id == myForm.get('brand')?.value.id">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md position-relative">
+                        <label class="form-label-sm mb-1" for="category-radiogroup">Group</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Category</span>
+                            <input type="text" class="form-control form-control-sm" placeholder="Select"
+                                [value]="myForm.get('category')?.value == undefined ? '' : myForm.get('category')?.value.name"
+                                readonly>
+                            <span class="input-group-text">SubCategory</span>
+                            <input type="text" class="form-control form-control-sm" readonly placeholder="Select"
+                                [value]="myForm.get('sub-category')?.value == undefined ? '' : myForm.get('sub-category')?.value.name">
+                            <span class="input-group-text list-hover dropdown-toggle" data-bs-toggle="collapse"
+                                data-bs-target="#category-list-box"></span>
+                        </div>
+                        <div class="collapse" id="category-list-box">
+                            <div class="card-body card mt-2">
+                                <ul style="list-style: none;" id="category-radiogroup">
+                                    <li *ngFor="let c of myForm.get('category-list')?.value">
+                                        <div class="form-check">
+                                            <label class="form-check-label" [for]="c.id">{{c.name}}</label>
+                                            <input class="form-check-input" type="radio" name="category" [id]="c.id"
+                                                [value]="c" formControlName="category"
+                                                [checked]="c.id == myForm.get('category')?.value.id">
+                                        </div>
+                                        <ul style="list-style: none;"
+                                            [hidden]="myForm.get('category')?.value.id !== c.id">
+                                            <li *ngFor="let sc of c.subCategories">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" [for]="sc.id">{{sc.name}}</label>
+                                                    <input class="form-check-input" type="radio" name="sub-category"
+                                                        [id]="sc.id" [value]="sc" formControlName="sub-category"
+                                                        [checked]="sc.id == myForm.get('sub-category')?.value.id">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md position-relative">
+                        <label class="form-label-sm mb-1">Packaging</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text"> Pack Type </span>
+                            <input type="text" class="form-control form-control-sm" placeholder="Select"
+                                [value]="myForm.get('packtype')?.value == undefined ? '' : myForm.get('packtype')?.value.name"
+                                readonly>
+                            <span class="input-group-text dropdown-toggle list-hover" data-bs-toggle="collapse"
+                                data-bs-target="#packtype-list-box"> </span>
+                        </div>
+                        <div class="collapse" id="packtype-list-box">
+                            <div class="card-body card mt-2">
+                                <ul style="list-style: none;">
+                                    <li *ngFor="let packtype of myForm.get('packtype-list')?.value">
+                                        <div class="form-check">
+                                            <label class="form-check-label"
+                                                [for]="packtype.id">{{packtype.name}}</label>
+                                            <input class="form-check-input" type="radio" name="packtype"
+                                                [id]="packtype.id" [value]="packtype" formControlName="packtype"
+                                                [checked]="packtype.id == myForm.get('packtype')?.value.id">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md position-relative">
+                        <label class="form-label-sm mb-1" for="category-radiogroup">Packaging</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text dropdown-toggle"> Pack Size </span>
+                            <input type="text" class="form-control form-control-sm" placeholder="Select"
+                                [value]="myForm.get('packsize')?.value == undefined ? '' : myForm.get('packsize')?.value.name"
+                                readonly>
+                            <span class="input-group-text dropdown-toggle list-hover" data-bs-toggle="collapse"
+                                data-bs-target="#packsize-list-box"></span>
+                        </div>
+                        <div class="collapse" id="packsize-list-box">
+                            <div class="card-body card mt-2">
+                                <ul style="list-style: none;">
+                                    <li *ngFor="let ps of myForm.get('packsize-list')?.value">
+                                        <div class="form-check">
+                                            <label class="form-check-label" [for]="ps.id">{{ps.name}}</label>
+                                            <input class="form-check-input" type="radio" name="packsize" [id]="ps.id"
+                                                [value]="ps" formControlName="packsize"
+                                                [checked]="ps.id == myForm.get('packsize')?.value.id">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row g-1 mb-3">
+                    <div class="col-md position-relative form-check">
+                        <input type="checkbox" class="form-check-input" id="setup-stock-status"
+                            formControlName='stock-status' [readonly]="!edit">
+                        <label for="setup-stock-status" class="form-check-label ">Status</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-body px-0" *ngIf="!edit">
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Name</div>
+                    <div class="col-sm ">{{myForm.get('stock-name')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Id</div>
+                    <div class="col-sm ">{{myForm.get('stock-code')?.value}}</div>
+                </div>
+
+            </div>
+        </form>
+        <form [formGroup]='myStockHoldingForm' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">Warehouse detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{myForm.get('stock-cdate')?.value | date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body" [hidden]="!edit">
+                <table class="table table-borderless">
+                    <thead class="table-light">
+                        <tr class="border-bottom">
+                            <th scope="col" class="align-middle">#</th>
+                            <th scope="col" class="align-middle">Warehouse Name</th>
+                            <th scope="col" class="align-middle">Warehouse Id</th>
+                            <th scope="col" class="align-middle">Stock Qty</th>
+                            <th scope="col" class="align-middle">
+                                <select class="form-select form-select-sm border-0" formControlName="cm"
+                                    style="width: auto;" (change)="companyChange()">
+                                    <option value="" disabled>Select Company</option>
+                                    <option [ngValue]="cm" *ngFor="let cm of myStockHoldingForm.get('cm-list')?.value"
+                                        [selected]="myStockHoldingForm.get('cm')?.value.id == cm.id"> {{cm.name}}
+                                    </option>
+                                </select>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let sh of myStockHoldingForm.get('stkhold-list')?.value; let i= index ">
+                            <th scope="row">{{i+1}}</th>
+                            <td> {{sh.warehouse.name}}</td>
+                            <td> {{sh.warehouse.code}}</td>
+                            <td> {{sh.qty}}</td>
+                            <td> <i class="fa fa-edit list-hover" (click)="editStockHolding(i)"></i></td>
+                        </tr>
+                        <tr *ngIf="myStockHoldingForm.get('stkhold-list')?.value.length == 0">
+                            <th scope="row" colspan="5">No record</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+
+
+            </div>
+        </form>
+        <form [formGroup]='base_stockUnitForm' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">Stock Unit<span class="text-primary ms-3"
+                        style="font-size: small;">{{myForm.get('stock-cdate')?.value | date:'longDate'}}</span></div>
+            </div>
+
+            <div class="card-body" [hidden]="!edit">
+                <div class="row g-3 mb-3">
+                    <div class="col-md position-relative ">
+                        <label class="form-label form-label-sm" style="width: 100%;">Currency</label>
+                        <ul style="list-style: none;" >
+                            <li *ngFor="let currency of stockUnitForm.get('currency-list')?.value">
+                                <div class="form-check"id="myselected-tem">
+                                    <label class="form-check-label" [for]="'cur-'+currency.id">{{currency.name}}</label>
+                                    <input class="form-check-input" type="radio" [name]="'currency'"
+                                        [id]="'cur-'+currency.id" [value]="currency" formControlName="currency"
+                                        [checked]="currency.id == base_stockUnitForm.get('currency')?.value.id"
+                                       >
+                                </div>
+
+                            </li>
+                        </ul>
+
+
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="base-stock-uom-list" class="form-label form-label-sm">Base Stock Unit</label>
+                        <select class="form-select form-select-sm" formControlName="uom" id="base-stock-uom-list" >
+                            <option value=''>-</option>
+                            <option [ngValue]="uom" [selected]="uom.id == base_stockUnitForm.get('uom')?.value.id"
+                                *ngFor="let uom of stockUnitForm.get('stockunit-list')?.value; let i=index">
+                                {{uom.name}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md position-relative" *ngIf="base_stockUnitForm.get('currency')?.value !== ''">
+                        <label for="base-stock-uom-list" class="form-label form-label-sm">Price</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control-sm form-control" formControlName="price">
+                            <div class="input-group-text">{{base_stockUnitForm.get('currency')?.value.code}}</div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <p class="mt-3">Additional Stock Units</p>
+                <table class="table table-borderless">
+
+                    <thead class="table-light">
+                        <tr class="border-bottom">
+                            <th scope="col">#</th>
+                            <th scope="col">Unit</th>
+                            <th scope="col">Price Type</th>
+
+                            <th scope="col">Ratio</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col">
+                                <i class="fa fa-plus list-hover" id="add-fa-fa"
+                                    *ngIf="base_stockUnitForm.get('uom')?.valid" (click)="openStockUnitModel()"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let uom of stockUnitForm.get('stockunit-setup-list')?.value; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{uom.uom.name}}</td>
+                            <td>{{uom.priceType.name}}</td>
+
+                            <td>{{uom.ratio}}</td>
+                            <td>{{uom.price}}</td>
+                            <td>{{uom.currency.name}}</td>
+                            <td></td>
+                        </tr>
+                        <tr *ngIf="stockUnitForm.get('stockunit-setup-list')?.value.length==0">
+                            <th scope="row" colspan="6">No record</th>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-stockhold" tabindex="-1" aria-labelledby="" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" style="width: 300px;">
+        <div class="modal-content">
+            <form [formGroup]="mySubStockHoldingForm">
+                <div class="modal-header border-bottom-0">
+                    <div class="modal-title text-capitalize">
+                        <strong>{{mySubStockHoldingForm.get('wh-name')?.value}}</strong>
+                    </div>
+                    <button class="btn-close" data-bs-dismiss='modal' aria-label="Close"></button>
+                </div>
+                <div class="modal-body mx-1">
+                    <div class="row">
+                        <div class="col"><input formControlName="qty" type="number"
+                                class="form-control form-control-sm ">
+                            <span class="text-danger"
+                                *ngIf="!mySubStockHoldingForm.get('qty')?.valid && mySubStockHoldingForm.get('qty')?.touched">
+                                Quantity must be greater than '0'
+                            </span>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button class="btn btn-sm " (click)="submitStockQty()">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-stockunit" tabindex="-1" aria-labelledby="" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <form [formGroup]="setup_stockUnitForm">
+                <div class="modal-header border-bottom-0">
+                    <div class="modal-title text-capitalize">
+                        <strong>Stock Unit</strong>
+                    </div>
+                    <button class="btn-close" data-bs-dismiss='modal' aria-label="Close"></button>
+                </div>
+                <div class="modal-body mx-1">
+                    <div class="row mb-3">
+                        <label class="col-sm-5 col-form-label col-form-label-sm">Stock Unit</label>
+                        <div class="col-sm">
+                            <select class="form-select form-select-sm" formControlName="uom" id="stock-uom-list"
+                                (change)="selectChange()">
+                                <option value='' disabled>-</option>
+                                <option [ngValue]="uom" [disabled]="base_stockUnitForm.get('uom')?.value.id == uom.id"
+                                    *ngFor="let uom of stockUnitForm.get('stockunit-list')?.value; let i=index">
+                                    {{uom.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="setup_stockUnitForm.get('uom')?.value !== ''">
+                        <div class="row mb-3">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">
+                                1 <span
+                                    class="text-decoration-underline">{{setup_stockUnitForm.get('uom')?.value.name}}</span>
+                                is made of</label>
+                            <div class="col-sm">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" class="form-control" style="text-align: end;"
+                                        formControlName="ratio">
+                                    <div class="input-group-text">
+                                        {{base_stockUnitForm.get('uom')?.value.name}}
+                                    </div>
+                                </div>
+                                <span class="text-danger"
+                                    *ngIf="!setup_stockUnitForm.get('ratio')?.valid && setup_stockUnitForm.get('ratio')?.touched">
+                                    Invalid value
+                                </span>
+                            </div>
+
+                        </div>
+                        <fieldset class="row mb-3">
+                            <legend class="col-sm-5 col-form-label col-form-label-sm pt-0">Price Type</legend>
+                            <div class="col-sm">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="pricetype-checkbox"
+                                        id="pt-specific" formControlName="is-specific">
+                                    <label class="form-check-label" for="pt-specific">By Specific</label>
+                                </div>
+                                <div class="input-group input-group-sm"
+                                    *ngIf="setup_stockUnitForm.get('is-specific')?.value">
+                                    <input class="form-control form-control-sm" formControlName="price"
+                                        id="specific-price-inputform">
+                                    <div class="input-group-text">{{base_stockUnitForm.get('currency')?.value.code}}
+                                    </div>
+                                </div>
+                                <span class="text-muted" *ngIf="setup_stockUnitForm.get('is-specific')?.value">
+                                    {{setup_stockUnitForm.get('ratio')?.value * base_stockUnitForm.get('price')?.value}}
+                                    {{base_stockUnitForm.get('currency')?.value.code}}
+                                </span>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button class="btn btn-sm " (click)="submitNewStockUnit()" data-bs-dismiss='modal'>
+                        Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>

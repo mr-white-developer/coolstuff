@@ -150,6 +150,7 @@ public class StockService implements CrudTemplate<Stock> {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		return null;
 	}
 	@Override
 	public ViewResult<Stock> save(Stock data, RequestCredential crd, Connection conn) {

@@ -1,0 +1,124 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-start">
+            <pagination-controls id="pc-b" (pageChange)="_pageChanged($event)"></pagination-controls>
+            <div class="clearfix" id="myspinner">
+                <div class="spinner-border ms-2" role="status">
+                    <span class="visually-hidden"></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h1 class="page-title">Company</h1>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-light me-2" data-bs-toggle="collapse" data-bs-target="#cri-box">
+                SearchBox
+            </button>
+            <button class="btn btn-sm btn-light" (click)="routeNew()">New</button>
+        </div>
+    </div>
+    <div class="collapse" id="cri-box">
+        <div class="px-3 pt-4 pb-2 bg-light rounded">
+            <form [formGroup]="myFormGroup" (ngSubmit)="search()">
+                <div class="row">
+                    <div class="col px-5">
+                        <div class="row mb-2">
+                            <label for="company-list-company-name" class="col-sm-3 col-form-label-sm">Name</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control form-control-sm col-sm"
+                                    id="company-list-company-name" formControlName="company-name">
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="company-list-company-code" class="col-sm-3 col-form-label-sm">Id</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="company-list-company-code" formControlName="company-code"></div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="company-list-company-status" class="col-form-label-sm col-sm-3">Status</label>
+                            <div class="col-sm">
+                                <select class="form-select form-select-sm col-sm" id="company-list-company-status"
+                                    formControlName="company-status">
+                                    <option value="-1" selected> - </option>
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col px-5">
+                        <div class="row mb-2">
+                            <label for="company-list-person-name" class="col-sm-3 col-form-label-sm">Person Name</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="company-list-pserson-name" formControlName="company-pname"></div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="company-list-person-email" class="col-sm-3 col-form-label-sm">Email</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="company-list-person-email" formControlName="company-email"></div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <label for="company-list-company-phone" class="col-sm-3 col-form-label-sm">Phone No</label>
+                            <div class="col-sm"> <input type="text" class="form-control form-control-sm col-sm"
+                                    id="company-list-company-phone" formControlName="company-phone"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row ">
+                    <div class="col d-flex justify-content-end">
+                        <button class="btn btn-sm btn-light" (click)="searchUndo()">
+                            <i class="fa fa-undo"></i>
+                        </button>
+                        <button class="btn btn-sm btn-light" type="submit">
+                            <i class="fa fa-search"></i>
+
+                        </button>
+                    </div>
+                </div>
+                <!-- <div class="dropdown-divider"></div> -->
+            </form>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 1.25%;">No</th>
+                <th scope="col" style="width: 1.25%;">Name</th>
+                <th scope="col" style="width: 1.25%;">Id</th>
+                <th scope="col" style="width: 1.25%;">Person Name</th>
+                <th scope="col" style="width: 1.25%;">Email</th>
+                <th scope="col" style="width: 1.25%;">Phone</th>
+                
+                <th scope="col" style="width: 1.25%">Registered Date</th>
+                <th scope="col" style="width: 1.25%">Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let i of _list | paginate:pg_config;" (click)="showDetail(i.id)">
+                <th scope="row">{{i.rowNumber}}</th>
+                <td>{{i.name}}</td>
+                <td>{{i.code}}</td>
+                <td>{{i.ownerName}}</td>
+                <td>{{i.email}}</td>
+                <td>{{i.phone}}</td>
+                <td>{{i.cdate | date:'mediumDate'}}</td>
+                <td>
+                    <i class="fa fa-dot-circle text-success" *ngIf="i.status==1"></i>
+                    <i class="fa fa-dot-circle text-muted" *ngIf="i.status==2"></i>
+                    <i class="fa fa-dot-circle text-danger" *ngIf="i.status==4"></i>
+                </td>
+            </tr>
+            <tr *ngIf="_list.length == 0">
+                <th scope="row" colspan="8" class="text-muted" style="text-align: center;"> Oops !</th>
+            </tr>
+        </tbody>
+    </table>
+</div>

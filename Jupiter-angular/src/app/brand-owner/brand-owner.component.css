@@ -1,0 +1,10 @@
+
+input.ng-touched.ng-invalid{
+    border:1px solid red;
+}
+input:read-only,textarea:read-only{
+    background-color: transparent;
+}
+#btn-bo-save, #btn-bo-delete,#btn-bo-inactive{
+    display: none;
+}

@@ -1,0 +1,14 @@
+<h1>{{inputString}}</h1>
+<form [formGroup]="fG">
+    <div class="mb-3">
+        <label for="" class="col-form-label col-form-label-sm">Name</label>
+        <input type="text" class="form-control form-control-sm" id="sub-input-name"
+        formControlName="sub-name">
+
+    </div>
+    <div class="mb-3">
+        <label for="sub-input-code" class="col-form-label col-form-label-sm">Code</label>
+        <input type="text" class="form-control form-control-sm" id="sub-input-code"
+        formControlName="sub-code">
+    </div>
+</form>

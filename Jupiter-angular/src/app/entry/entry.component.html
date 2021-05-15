@@ -1,0 +1,10 @@
+<p>entry works!</p>
+<form [formGroup]="myForm">
+    <button
+        (click)="click()">{{myForm.get('brand-owner')?.value.id}}<br>{{myForm.get('brand-owner')?.value.name}}</button>
+    <div class="form-check" *ngFor="let bo of myForm.get('brandowner-list')?.value">
+        <label class="form-check-label" [for]="bo.id">{{bo.name}}<br>{{bo.id}}</label>
+        <input class="form-check-input" type="radio" name="brand-owner" [value]="bo" formControlName="brand-owner"
+            [checked]="myForm.get('brand-owner')?.value.id == bo.id ? true:false">
+    </div>
+</form>

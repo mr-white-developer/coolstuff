@@ -1,0 +1,191 @@
+<div class="main-container">
+    
+    <div class="d-flex justify-content-between align-middle">
+        <h1 class="ms-3 page-title">Category</h1>
+        <div class="d-grid gap-2 d-md-flex" role="group">
+
+            <button class="btn btn-sm btn-light" routerLink="/category"><i class="fa fa-arrow-left"></i>
+                Back</button>
+            <button id="btn-category-save" class="btn btn-sm btn-light" type="button" (click)="submit()"
+                *ngIf="roles.button.save">
+                <i class="fa fa-check"></i>
+                <span class="ms-1"> Save</span>
+            </button>
+            <button id="btn-category-delete" class="btn btn-sm  btn-light" type="button" *ngIf="roles.button.delete"
+                (click)="deleteCategory()">
+                <i class="fa fa-trash"></i>
+                <span class="ms-1"> Delete</span>
+            </button>
+            <div id="btn-category-edit" class="form-check mt-2 align-middle" *ngIf="roles.button.edit">
+                <input class="form-check-input " type="checkbox" [(ngModel)]="edit" id="wh-cb-isedit"
+                    (change)="editOn()">
+                <label class="form-check-label" for="wh-cb-isedit">
+                    Edit
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="mx-3">
+        <form [formGroup]='myCategoryFormGroup' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">
+                    Category detail
+                    <span class="text-primary ms-3" style="font-size: small;">{{myCategoryFormGroup.get('cat-cdate')?.value |
+                        date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body px-0" [hidden]="!edit">
+                <div class="row g-4 mb-1">
+                    <div class="col-md position-relative">
+                        <label for="setup-category-name" class="form-label-sm mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-category-name"
+                            [readonly]="!edit" formControlName="cat-name">
+                        <span class="text-danger "
+                            *ngIf="!myCategoryFormGroup.get('cat-name')?.valid && myCategoryFormGroup.get('cat-name')?.touched">
+                            Please enter valid name
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-category-id" class="form-label-sm mb-1">Id</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-category-id"
+                            [readonly]="!edit" formControlName="cat-code">
+                        <span class="text-danger "
+                            *ngIf="!myCategoryFormGroup.get('cat-code')?.valid && myCategoryFormGroup.get('cat-code')?.touched">
+                            Please enter valid id (*****)
+                        </span>
+                    </div>
+                </div>
+                <div class="row g-1 mt-1">
+                    <div class="col-md position-relative form-check">
+                        <input type="checkbox" class="form-check-input" id="setup-category-status"
+                            [formControlName]="'cat-status'" [readonly]="!edit">
+                        <label for="setup-category-status" class="form-check-label ">Status</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Name</div>
+                    <div class="col-sm ">{{myCategoryFormGroup.get('cat-name')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Id</div>
+                    <div class="col-sm ">{{myCategoryFormGroup.get('cat-code')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+
+                    <div class="col-sm-3 fw-500">Active</div>
+                    <div class="col-sm ">
+                        {{myCategoryFormGroup.get('cat-status')?.value == 1 ? 'Yes':'NO'}}
+                    </div>
+                </div>
+            </div>
+        </form>
+     
+        <div class="card border-0" *ngIf="myCategoryFormGroup.get('cat-id')?.value != '-1'">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">Sub-Category detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{myCategoryFormGroup.get('wh-cdate')?.value |
+                        date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body px-0">
+                <div>
+                    <div class="row" [hidden]="!edit">
+                        <div class="col-sm-11">Columns</div>
+                        <div class="col-sm-1" style="text-align: end;">
+                            <button class="btn btn-sm  rounded-circle"
+                                (click)="addNewSubCategory()"><i class="fa fa-plus"></i></button>
+                            </div>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                            <th scope="col" style="width: 5%;">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Active</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" style="width: 5%;"></th>
+                            <th scope="col" style="width: 5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let sub of myCategoryFormGroup.get('cat-sublist')?.value; let i=index">
+
+                                <th scope="row" class="align-middle">{{i+1}}</th>
+                                <td class="align-middle">
+                                    <!-- <input [(ngModel)]="sub.name" > -->{{sub.name}}
+                                </td>
+                                <td class="align-middle">
+                                    <!-- <input [(ngModel)]="sub.code" > -->{{sub.code}}
+                                </td>
+                                <td class="align-middle">
+                                    <!-- <input type="checkbox" class="form-check-input" 
+                                    [(ngModel)]="sub.status"> -->
+                                    <span [ngClass]="sub.status == 1 ? 'text-success fw-500':'text-muted fw-500'">{{sub.status == 1 ? 'Yes':'No'}}</span>
+                                </td>
+                                <td class="align-middle">
+                                    <span class="text-warning">
+                                        {{ sub.id == '-1' ? 'Pending':'Saved'}}
+                                    </span>
+
+                                </td>
+                                <td class="align-middle">
+                                    <i class="fa fa-edit list-hover" [hidden]="!edit"
+                                        (click)="editSubCategory(sub)"></i>
+                                    </td>
+                                <td class="align-middle">
+                                    <i class="fa fa-trash list-hover" [hidden]="!edit"></i>
+                                </td>
+                            </tr>
+                            <tr *ngIf="myCategoryFormGroup.get('cat-sublist')?.value.length == 0">
+                                <th scope="row" colspan="7" class="text-muted" style="text-align: center;"> Oops !</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+       
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-subcategory-setup" tabindex="-1" aria-labelledby="" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">SubCategory</div>
+                <button class="btn-close" data-bs-dismiss='modal' aria-label="Close" id="sub-btn-modal-close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="mySubCategoryFormGroup">
+                    <div class="mb-3">
+                        <label for="" class="col-form-label col-form-label-sm">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="sub-input-name"
+                            formControlName="sub-name">
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="sub-input-code" class="col-form-label col-form-label-sm">Code</label>
+                        <input type="text" class="form-control form-control-sm" id="sub-input-code"
+                            formControlName="sub-code">
+                    </div>
+                    <div class="md-3">
+                        <input type="checkbox" class="form-check-input" id="setup-subcategory-status"
+                            formControlName="sub-status">
+                        <label for="setup-subcategory-status" class="form-check-label ms-1 ">Status</label>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" (click)="submitSubCategory()" id="sub-btn-save">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

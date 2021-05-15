@@ -1,0 +1,107 @@
+<div class="main-container">
+    <div class="d-flex justify-content-between align-middle">
+        <h1 class="ms-3 page-title" >Company</h1>
+        <div class="d-grid gap-2 d-md-flex" role="group">
+            <button class="btn btn-sm btn-light" routerLink="/company-list"><i class="fa fa-arrow-left"></i>
+                Back</button>
+            <button id="btn-company-save" class="btn btn-sm btn-light" type="button" (click)="submit()"
+                *ngIf="roles.button.save">
+                <i class="fa fa-check"></i>
+                <span class="ms-1"> Save</span>
+            </button>
+            <button id="btn-company-delete" class="btn btn-sm  btn-light" type="button" *ngIf="roles.button.delete"
+                (click)="delete()">
+                <i class="fa fa-trash"></i>
+                <span class="ms-1"> Delete</span>
+            </button>
+            <div id="btn-company-edit" class="form-check mt-2 align-middle" *ngIf="roles.button.edit">
+                <input class="form-check-input " type="checkbox" [(ngModel)]="edit" id="company-cb-isedit"
+                    (change)="editOn()">
+                <label class="form-check-label" for="company-cb-isedit">
+                    Edit
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="mx-3">
+        <form [formGroup]='myFormGroup' class="card border-0">
+            <div class="card-header bg-transparent pb-0 border-0 px-0" style="color: var(--main-color);">
+                <div class="card-title">Company detail<span class="text-primary ms-3"
+                        style="font-size: small;">{{myFormGroup.get('company-cdate')?.value | date:'longDate'}}</span></div>
+            </div>
+            <div class="card-body px-0" [hidden]="!edit">
+                <div class="row g-6 mb-1">
+                    <div class="col-md position-relative">
+                        <label for="setup-company-name" class="form-label-sm mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-company-name" [readonly]="!edit"
+                            formControlName="company-name">
+                        <span class="text-danger "
+                            *ngIf="!myFormGroup.get('company-name')?.valid && myFormGroup.get('company-name')?.touched">
+                            Please enter valid name
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-company-id" class="form-label-sm mb-1">Id</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-company-id" [readonly]="!edit"
+                            formControlName="company-code">
+                        <span class="text-danger "
+                            *ngIf="!myFormGroup.get('company-code')?.valid && myFormGroup.get('company-code')?.touched">
+                            Please enter valid id (*****)
+                        </span>
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-company-pname" class="form-label-sm mb-1">CEO Name</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-company-pname" [readonly]="!edit"
+                            formControlName="company-pname">
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-company-email" class="form-label-sm mb-1">Email</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-company-email" [readonly]="!edit"
+                            formControlName="company-email">
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="setup-company-phone" class="form-label-sm mb-1">Phone No</label>
+                        <input type="text" class="form-control form-control-sm" id="setup-company-phone" [readonly]="!edit"
+                            formControlName="company-phone">
+                    </div>
+
+                </div>
+                <div class="row g-1 mt-1">
+                    <div class="col-md position-relative form-check">
+                        <input type="checkbox" class="form-check-input" id="setup-company-status"
+                            [formControlName]="'company-status'" [readonly]="!edit">
+                        <label for="setup-company-status" class="form-check-label ">Status</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0" *ngIf="!edit">
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Name</div>
+                    <div class="col-sm ">{{myFormGroup.get('company-name')?.value}}
+                        <span class="badge rounded-pill bg-success" *ngIf="myFormGroup.get('company-status')?.value">active</span>
+                        <span class="badge rounded-pill bg-secondary" *ngIf="!myFormGroup.get('company-status')?.value">active</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Id</div>
+                    <div class="col-sm ">{{myFormGroup.get('company-code')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">CEO Name</div>
+                    <div class="col-sm ">{{myFormGroup.get('company-pname')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Contact Email</div>
+                    <div class="col-sm ">{{myFormGroup.get('company-email')?.value}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 fw-500">Contact Phone Number</div>
+                    <div class="col-sm ">{{myFormGroup.get('company-phone')?.value}}</div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
