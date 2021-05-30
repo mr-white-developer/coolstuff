@@ -80,8 +80,6 @@ public class UomStockDao {
 				uom.setName(rs.getString("us_name"));
 				uom.setStatus(rs.getInt("us_status"));
 				uom.setBase(rs.getInt("us_base"));
-//				uom.setCdate(rs.getDate(""));
-//				uom.setMdate(rs.getDate(""));
 				uom.setRatio(rs.getInt("us_ratio"));
 				uom.setPrice(rs.getDouble("us_price"));
 				uom.setRate(rs.getDouble("us_rate"));
@@ -91,26 +89,19 @@ public class UomStockDao {
 				pt.setCode(rs.getString("pt_code"));
 				pt.setName(rs.getString("pt_name"));
 				pt.setStatus(rs.getInt("pt_status"));
-//				pt.setCdate(rs.getDate(""));
-//				pt.setMdate(rs.getDate(""));
 				uom.setPriceType(pt);
 				
 				Uom u = new Uom();
 				u.setId(rs.getString("uom_id"));
 				u.setCode(rs.getString("uom_code"));
 				u.setName(rs.getString("uom_name"));
-//				u.setStatus(rs.getInt(""));
-//				u.setCdate(rs.getDate(""));
-//				u.setMdate(rs.getDate(""));
+
 				uom.setUom(u);
 				
 				Currency cur = new Currency();
 				cur.setId(rs.getString("cur_id"));
 				cur.setCode(rs.getString("cur_code"));
 				cur.setName(rs.getString("cur_name"));
-//				cur.setStatus(rs.getInt(""));
-//				cur.setCdate(rs.getDate(""));
-//				cur.setMdate(rs.getDate(""));
 				cur.setRate(rs.getInt("cur_rate"));
 				uom.setCurrency(cur);
 				

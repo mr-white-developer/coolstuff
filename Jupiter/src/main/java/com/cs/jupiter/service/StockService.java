@@ -6,6 +6,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.cs.jupiter.dao.BrandDao;
@@ -19,6 +20,7 @@ import com.cs.jupiter.dao.SubCategoryDao;
 import com.cs.jupiter.dao.UomStockDao;
 import com.cs.jupiter.model.data.RequestCredential;
 import com.cs.jupiter.model.data.ViewResult;
+import com.cs.jupiter.model.table.ImageData;
 import com.cs.jupiter.model.table.Pricing;
 import com.cs.jupiter.model.table.Stock;
 import com.cs.jupiter.model.table.StockHolding;
@@ -65,6 +67,12 @@ public class StockService implements CrudTemplate<Stock> {
 	
 	@Autowired
 	PackSizeDao psDao;
+	
+	@Autowired
+	ImageService imgService;
+	
+	@Autowired
+	Environment env;
 
 	public ViewResult<Stock> saveStockSetup(Stock d, RequestCredential crd, Connection conn) {
 		ViewResult<Stock> vr;
@@ -144,13 +152,40 @@ public class StockService implements CrudTemplate<Stock> {
 					throw new Exception(stockHoldResult.message);
 				}
 			}
-			
-			
+			Pricing p;
+			for (UomStock us : data.getUomStocks()) {
+				if (uomStockService.updateById(us, crd, conn).status != ComEnum.ErrorStatus.Success.getCode()) {
+					throw new Exception("fail to save UomStock");
+				}
+				p = new Pricing();
+				p.setMdate(today);
+				p.setUomStock(us);
+				p.setCurrency(us.getCurrency());
+				p.setPrice(us.getPrice());
+				p.setRate(us.getRate());
+				p.setStatus(us.getStatus());
+				ViewResult<Pricing> rtnPricing;
+				if(us.getStatus() == ComEnum.RowStatus.Deleted.getCode()){
+					rtnPricing = pricingDao.deleteByUomStock(p,conn);
+				}else{
+					rtnPricing = pricingDao.update(p, conn);
+				}
+				if(rtnPricing.status != ComEnum.ErrorStatus.Success.getCode()){
+					throw new Exception(rtnPricing.message);
+				}
+			}
+			conn.commit();
+			rtn = new ViewResult<Stock>(ComEnum.ErrorStatus.Success.getCode(), "");
 			
 		}catch(Exception e){
+			rtn = new ViewResult<Stock>();
+			rtn.status = ComEnum.ErrorStatus.ServerError.getCode();
+			rtn.message = e.getMessage();
+			logger.info(className);
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
-		return null;
+		return rtn;
 	}
 	@Override
 	public ViewResult<Stock> save(Stock data, RequestCredential crd, Connection conn) {
@@ -211,7 +246,7 @@ public class StockService implements CrudTemplate<Stock> {
 	public ViewResult<Stock> getAll(Stock data, RequestCredential crd, Connection conn) {
 		ViewResult<Stock> rtn;
 		try{
-			
+			System.out.println(env.getProperty("domain"));
 			rtn = stkDao.getAll(data, conn);
 			if(rtn.status != ComEnum.ErrorStatus.Success.getCode()){
 				
@@ -244,6 +279,18 @@ public class StockService implements CrudTemplate<Stock> {
 			}else{
 				throw new Exception("no item with given id");
 			}
+		}catch(Exception e){
+			rtn = new ViewResult<>(ComEnum.ErrorStatus.ClientError.getCode(), e.getMessage());
+			e.printStackTrace();
+		}
+		return rtn;
+	}
+	public ViewResult<ImageData> getStockImage(String id, RequestCredential crd, Connection conn){
+		ViewResult<ImageData> rtn = null;
+		try{
+			ImageData img = new ImageData();
+			img.setId(id);
+			rtn = imgService.getAll(img, crd, conn);
 		}catch(Exception e){
 			rtn = new ViewResult<>(ComEnum.ErrorStatus.ClientError.getCode(), e.getMessage());
 			e.printStackTrace();

@@ -4,6 +4,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BrandData, BrandOwnerData, CategoryData, PackSizeData, PriceTypeData, StockData, SubCategoryData } from '../model';
 import { PageServiceService } from '../page-service.service';
+import { PopupService } from '../popup.service';
 declare var $: any;
 @Component({
   selector: 'app-stock-list',
@@ -29,7 +30,8 @@ export class StockListComponent implements OnInit, AfterViewInit {
   });
   constructor(private pgService: PageServiceService,
     private http: HttpClient,
-    private route: Router) { }
+    private route: Router,
+    private alertCtrl:PopupService) { }
 
   ngAfterViewInit(): void {
     $('#myspinner').show();
@@ -40,7 +42,7 @@ export class StockListComponent implements OnInit, AfterViewInit {
       $('#myspinner').hide();
       $('.table').show();
     }).catch((e) => {
-      alert(e)
+      this.alertCtrl.showAlert(e)
       this._list = [];
       $('#myspinner').hide();
       $('.table').show();

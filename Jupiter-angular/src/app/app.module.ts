@@ -33,6 +33,12 @@ import { PriceTypeSetupComponent } from './price-type-setup/price-type-setup.com
 import { StockSetupComponent } from './stock-setup/stock-setup.component';
 import { StockListComponent } from './stock-list/stock-list.component';
 import { CheckedRadioDirective } from './checked-radio.directive';
+import { PopupComponent } from './popup/popup.component';
+import { LoadingComponent } from './popup/loading/loading.component';
+import { NotifierComponent } from './notifier/notifier.component';
+import { StockUnitFilterPipe } from './stock-setup/stock-unit-filter.pipe';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImgCropperComponent } from './img-cropper/img-cropper.component';
 
 
 @NgModule({
@@ -62,6 +68,11 @@ import { CheckedRadioDirective } from './checked-radio.directive';
     StockSetupComponent,
     StockListComponent,
     CheckedRadioDirective,
+    PopupComponent,
+    LoadingComponent,
+    NotifierComponent,
+    StockUnitFilterPipe,
+    ImgCropperComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,11 +83,12 @@ import { CheckedRadioDirective } from './checked-radio.directive';
     FormsModule,
     NgxPaginationModule,
     ReactiveFormsModule,
-    
+    ImageCropperModule
   ],
   providers: [
      { provide: LocationStrategy, useClass: HashLocationStrategy },
-     DatePipe
+     DatePipe,
+     PopupComponent
   ],
   bootstrap: [AppComponent]
 })

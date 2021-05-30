@@ -33,7 +33,7 @@ public class PrepareQuery {
 	}
 
 	public enum Type {
-		ID, VARCHAR, DATE, NUMBER;
+		ID, VARCHAR, DATE, NUMBER,BOOLEAN;
 		Type() {
 		}
 	}
@@ -61,14 +61,18 @@ public class PrepareQuery {
 
 	public void add(String col, Object val, Operator e, Type type) throws Exception {
 
-		if (type == Type.VARCHAR || type == Type.DATE) {
+		if (val.getClass() == String.class) {
 			if (val.equals("") || val.equals("-1"))
 				return;
-		} else if (type == Type.NUMBER) {
+		} else if (val.getClass() == Integer.class) {
 			if ((int) val == -1) {
 				return;
 			}
-		} else if (type == Type.ID) {
+		} else if (val.getClass() == Double.class) {
+			if ((double) val == -1) {
+				return;
+			}
+		} else if (val.getClass() == Long.class) {
 			if ((long) val == -1 || (long) val == 0)
 				return;
 		}
@@ -94,9 +98,14 @@ public class PrepareQuery {
 		} else if (type == Type.NUMBER || type == Type.ID) {
 			sb.append(" " + getDesc(e));
 			sb.append(val);
+		}else{
+			sb.append(" " + getDesc(e));
+			sb.append(val);
 		}
 		preList.add(sb.toString());
 	}
+
+	
 
 	public void addSelect(String col) throws Exception {
 		this.selectCol.add(col);
@@ -175,12 +184,13 @@ public class PrepareQuery {
 	public String createSetStatement() {
 		return createSetQuery();
 	}
-	public String getSelectStatement(){
+
+	public String getSelectStatement() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ");
-		for(int i=0; i<this.selectCol.size(); i++){
+		for (int i = 0; i < this.selectCol.size(); i++) {
 			sb.append(" " + this.selectCol.get(i));
-			if(i != this.selectCol.size() -1){
+			if (i != this.selectCol.size() - 1) {
 				sb.append(",");
 			}
 		}

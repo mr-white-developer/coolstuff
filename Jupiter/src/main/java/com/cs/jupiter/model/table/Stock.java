@@ -2,7 +2,6 @@ package com.cs.jupiter.model.table;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.cs.jupiter.model.data.ViewCredential;
 
 public class Stock extends ViewCredential{
@@ -11,23 +10,24 @@ public class Stock extends ViewCredential{
 	private Category category;
 	private SubCategory subCategory;
 	private Brand brand;
-	
-
 	private PackType packType;
 	private PackSize packSize;
 	private List<StockHolding> stockHoldings;
 	private List<UomStock> uomStocks;
+	private List<ImageData> images;
 	
 	public Stock(){
 		super();
 		this.stockHoldings = new ArrayList<>();
 		this.uomStocks = new ArrayList<>();
+		this.images = new ArrayList<>();
 	}
 	public Stock(String id){
 		super();
 		this.setId(id);
 		this.stockHoldings = new ArrayList<>();
 		this.uomStocks = new ArrayList<>();
+		this.images = new ArrayList<>();
 	}
 
 	public int getRowNumber() {
@@ -92,6 +92,12 @@ public class Stock extends ViewCredential{
 
 	public void setStockHoldings(List<StockHolding> stockHoldings) {
 		this.stockHoldings = stockHoldings;
+	}
+	public List<ImageData> getImages() {
+		return images;
+	}
+	public void setImages(List<ImageData> images) {
+		this.images = images;
 	}
 
 	

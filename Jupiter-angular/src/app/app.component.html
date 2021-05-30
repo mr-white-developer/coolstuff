@@ -33,6 +33,24 @@
             </li>
           </ul>
         </li>
+        <li class="nav-item active dropdown">
+          <a class="nav-link dropdown-toggle" id="admin-popup" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Service
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="admin-popup">
+            <li>
+              <a class="dropdown-item list-hover" (click)="popup()">
+                Show Alert
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item list-hover" (click)="loading()">
+                Show Loading
+              </a>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
    
@@ -40,3 +58,4 @@
 
 </nav>
 <router-outlet></router-outlet>
+<div class="notifier toast-container"></div>

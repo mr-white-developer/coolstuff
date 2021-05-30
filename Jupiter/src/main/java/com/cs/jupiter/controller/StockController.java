@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.cs.jupiter.model.data.ViewResult;
+import com.cs.jupiter.model.table.ImageData;
 import com.cs.jupiter.model.table.Stock;
 import com.cs.jupiter.service.StockService;
 import com.cs.jupiter.utility.ComEnum;
@@ -60,9 +61,19 @@ public class StockController extends RequestController{
 			@RequestBody Stock data,
 			HttpServletRequest req,HttpServletResponse resp){
 		try (Connection con = ds.getConnection()) {
-			return stkService.saveStockSetup(data, getReqHeader(req, resp), con);
+			return stkService.updateStockSetup(data, getReqHeader(req, resp), con);
 		} catch (SQLException e) {
 			return new ViewResult<Stock>(ComEnum.ErrorStatus.DatabaseError.getCode(), e.getMessage());
 		}
 	}
+	@PostMapping(value = "/get-image/{id}")
+	public ViewResult<ImageData> getImageByStock(@PathVariable("id") String id,
+			HttpServletRequest req,HttpServletResponse resp){
+		try (Connection con = ds.getConnection()) {
+			return stkService.getStockImage(id, getReqHeader(req, resp), con);
+		} catch (SQLException e) {
+			return new ViewResult<ImageData>(ComEnum.ErrorStatus.DatabaseError.getCode(), e.getMessage());
+		}
+	}
+	
 }

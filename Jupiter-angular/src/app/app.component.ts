@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component,  OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PageServiceService } from './page-service.service';
+import { PopupService } from './popup.service';
 
 declare var $: any;
 
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private route: Router,
     private http: HttpClient,
     private pgService: PageServiceService,
+    private load: PopupService
   ) {
     console.log("main constructor")
     //this.readConfig();
@@ -68,11 +70,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   showChild(category: any) {
     this.selected_category = category;
   }
-  hide() {
-    $('#alert-box').removeClass('show')
+  popup() {
+    this.load.showAlert("hi");
   }
-  show() {
-    $('#alert-box').addClass('show')
+  async loading() {
+    await this.load.showLoading("hi").then( (e:any)=>{
+      e.present();
+      e.dismiss();
+    });
+    console.log("im")
+    
   }
 
 }

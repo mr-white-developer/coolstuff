@@ -29,7 +29,7 @@ public class StockHoldingDao {
 
 			String sql = "INSERT INTO public.stockholding"
 					+ "(id, code, name, status, cdate, mdate, fk_warehouse, fk_stock, quantity,rate,fk_company) VALUES "
-					+ "(?, ?, ?, ?, ?::date, ?::date, ?, ?, ?,?);";
+					+ "(?, ?, ?, ?, ?::date, ?::date, ?, ?, ?,?,?);";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			int i = 1;
 			stmt.setLong(i++, Long.parseLong(data.getId()));

@@ -1,8 +1,8 @@
 <div class="main-container">
-    <div class="d-flex justify-content-between">
+    <div class="menu d-flex justify-content-between">
         <div class="d-flex justify-content-start">
             <pagination-controls id="pc-b" (pageChange)="_pageChanged($event)"></pagination-controls>
-            <div class="clearfix" id="myspinner" >
+            <div class="clearfix" id="myspinner">
                 <div class="spinner-border ms-2" role="status">
                     <span class="visually-hidden"></span>
                 </div>
@@ -18,10 +18,35 @@
             <button class="btn btn-sm btn-light" (click)="routeNew()">New</button>
         </div>
     </div>
-    <div class="collapse" id="cri-box">
-        <div class="px-3 pt-4 pb-2 bg-light rounded">
-            <form [formGroup]="myFormGroup" (ngSubmit)="search()">
-                <div class="row">
+    <div class="main-container-inner-body card">
+        <div class="collapse" id="cri-box">
+            <div class="card-header">Search Box</div>
+            <form [formGroup]="myFormGroup" (ngSubmit)="search()" class="card-body border-bottom">
+                <div class="row g-3 mb-2">
+                    <div class="col-md position-relative">
+                        <label class="col-sm-2 col-form-label-sm">Name</label>
+                        <input type="text" class="form-control form-control-sm col-sm" id="stock-list-stock-pricetype"
+                            formControlName="stock-name">
+                    </div>
+
+                    <div class="col-md position-relative"><label class="col-sm-2 col-form-label-sm"
+                            for="stock-list-stock-code">Code</label>
+                        <input type="text" class="form-control form-control-sm col-sm" id="stock-list-stock-code"
+                            formControlName="stock-code">
+                    </div>
+                    <div class="col-md position-relative">
+                        <label for="stock-list-stock-status"
+                            class="col-form-label col-form-label-sm col-sm-2">Status</label>
+                        <select class="form-select form-select-sm col-sm" id="stock-list-stock-status"
+                            formControlName="stock-status">
+                            <option value="-1" selected> - </option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="row">
                     <div class="col">
                         <div class="row mb-2">
                             <label class="col-sm-2 col-form-label-sm">Name</label>
@@ -45,48 +70,53 @@
                                 id="stock-list-stock-code" formControlName="stock-code">
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="row ">
+                <div class="row g1">
                     <div class="col d-flex justify-content-end">
                         <button class="btn btn-sm btn-light" (click)="searchUndo()">
                             <i class="fa fa-undo"></i>
                         </button>
                         <button class="btn btn-sm btn-light" type="submit">
                             <i class="fa fa-search"></i>
-                             
+
                         </button>
                     </div>
                 </div>
                 <!-- <div class="dropdown-divider"></div> -->
             </form>
         </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 10%;">No</th>
+                        <th scope="col" style="width: 18%;">Name</th>
+                        <th scope="col" style="width: 18%;">Id</th>
+                        <th scope="col" style="width: 18%">Registered Date</th>
+                        <th scope="col" style="width: 18%">Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of _list | paginate:pg_config;" (click)="showDetail(i.id)">
+                        <th scope="row">{{i.rowNumber}}</th>
+                        <td>{{i.name}}</td>
+                        <td>{{i.code}}</td>
+                        <td>{{i.cdate | date:'mediumDate'}}</td>
+                        <td>
+                            <!-- <i class="fa fa-dot-circle text-success" *ngIf="i.status==1"></i>
+                            <i class="fa fa-dot-circle text-muted" *ngIf="i.status==2"></i>
+                            <i class="fa fa-dot-circle text-danger" *ngIf="i.status==4"></i> -->
+                            <span class="dot bg-success" *ngIf="i.status==1"></span>
+                            <span class="dot bg-secondary" *ngIf="i.status==2"></span>
+                            <span class="dot bg-danger" *ngIf="i.status==4"></span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="_list.length == 0">
+                        <th scope="row" colspan="5" class="text-muted" style="text-align: center;"> Oops !</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col" style="width: 10%;">No</th>
-                <th scope="col" style="width: 18%;">Name</th>
-                <th scope="col" style="width: 18%;">Id</th>
-                <th scope="col" style="width: 18%">Registered Date</th>
-                <th scope="col" style="width: 18%">Active</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let i of _list | paginate:pg_config;" (click)="showDetail(i.id)">
-                <th scope="row">{{i.rowNumber}}</th>
-                <td>{{i.name}}</td>
-                <td>{{i.code}}</td>
-                <td>{{i.cdate | date:'mediumDate'}}</td>
-                <td>
-                    <i class="fa fa-dot-circle text-success" *ngIf="i.status==1"></i>
-                    <i class="fa fa-dot-circle text-muted" *ngIf="i.status==2"></i>
-                    <i class="fa fa-dot-circle text-danger" *ngIf="i.status==4"></i>
-                </td>
-            </tr>
-            <tr *ngIf="_list.length == 0">
-                <th scope="row" colspan="5" class="text-muted" style="text-align: center;"> Oops !</th>
-            </tr>
-        </tbody>
-    </table>
 </div>

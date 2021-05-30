@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
+import { syntaxError } from '@angular/compiler';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { BrandData, BrandOwnerData, CategoryData, CompanyData, CurrencyData, PackSizeData, PriceTypeData, PricingData, StockData, stockHoldingData, StockSetupData, StockUomData, SubCategoryData, UomData, ViewResult, WarehouseData } from '../model';
 import { PageServiceService } from '../page-service.service';
+import { PopupService } from '../popup.service';
 declare var $: any;
 
 @Component({
@@ -23,6 +25,7 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       edit: true
     }
   }
+  imageChooserEvent:any = '';
   myForm: FormGroup = new FormGroup({
     'stock-id': new FormControl('-1'),
     'stock-name': new FormControl('',
@@ -62,7 +65,8 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     'stockunit-filter-list': new FormControl([]),
     'pricetype-list': new FormControl([]),
     'currency-list': new FormControl([]),
-    'stockunit-setup-list': new FormControl([])
+    'stockunit-setup-list': new FormControl([]),
+    'stockunit-idstring-list': new FormControl('')
   })
   setup_stockUnitForm: FormGroup = new FormGroup({
     'id': new FormControl('-1'),
@@ -80,16 +84,15 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
   constructor(private activeRoute: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private pgService: PageServiceService) {
+    private pgService: PageServiceService,
+    private popupService: PopupService) {
 
   }
   async ngAfterViewInit(): Promise<void> {
-
     await this.pgService.getUomList({ id: '-1' }).then(rs => {
       this.stockUnitForm.get('stockunit-list')?.setValue(
         rs.list
       );
-
     }).catch(
       e => {
         this.stockUnitForm.get('stockunit-list')?.setValue(
@@ -128,17 +131,6 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     await this.pgService.getCompanyList({ id: '-1' }).then((resp: ViewResult<CompanyData>) => {
       this.myStockHoldingForm.get('cm-list')?.setValue(resp.list);
     });
-    this.myForm.get('brand-owner')?.valueChanges.subscribe(
-      changes => {
-        this.myForm.get('brand')?.setValue('')
-      }
-    )
-    this.myForm.get('category')?.valueChanges.subscribe(
-      changes => {
-        this.myForm.get('sub-category')?.setValue('')
-      }
-    )
-
 
     this.activeRoute.queryParams.subscribe(
       (p: Params) => {
@@ -156,20 +148,44 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
 
           $('#btn-stock-save').show();
         } else {
-          this.getStockById(id).then(
-            (resp: any) => {
-              this.mapStock(resp);
-              this.mapStockHolding(resp);
-              this.mapStockUnit(resp);
-            }
-          )
-          this.editOn();
+          this.popupService.showLoading("").then((e: any) => {
+            e.present();
+            this.getStockById(id).then(
+              (resp: any) => {
+                this.mapStock(resp);
+                this.mapStockHolding(resp);
+                this.mapStockUnit(resp);
+                e.dismiss();
+                this.edit = true;
+              }
+            ).catch(() => { e.dismiss() })
+            this.editOn();
+          })
+
         }
       }
     );
+    console.log(this.myForm.get('brand-owner')?.value)
+
   }
 
   ngOnInit(): void {
+    this.myForm.get('brand-owner')?.valueChanges.subscribe(
+      changes => {
+        this.myForm.get('brand')?.setValue('')
+      }
+    )
+    this.myForm.get('category')?.valueChanges.subscribe(
+      changes => {
+        this.myForm.get('sub-category')?.setValue('')
+      }
+    )
+    this.stockUnitForm.get('stockunit-setup-list')?.valueChanges.subscribe(
+      changes => {
+        if (changes.length > 0) this.base_stockUnitForm.get('uom')?.disable();
+        else this.base_stockUnitForm.get('uom')?.enable();
+      }
+    )
   }
   editOn() {
     if (this.edit) {
@@ -313,25 +329,25 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       qty: 0,
       warehouse: this._getWareHouseModel(),
       stock: this._getStockModel(),
-      company:this._getCompanyModel(),
+      company: this._getCompanyModel(),
       rate: 0
     }
   }
-  _getCompanyModel() : CompanyData{
+  _getCompanyModel(): CompanyData {
     return {
       currentRow: -1,
-      maxRowsPerPage:-1,
-      rowNumber:0,
-      id:'-1',
-      code:'',
-      name:'',
+      maxRowsPerPage: -1,
+      rowNumber: 0,
+      id: '-1',
+      code: '',
+      name: '',
       status: -1,
-      cdate:'',
-      mdate:'',
-      ownerName:'',
-      email:'',
-      phone:'',
-      warehouses:[]
+      cdate: '',
+      mdate: '',
+      ownerName: '',
+      email: '',
+      phone: '',
+      warehouses: []
     }
   }
   _getWareHouseModel(): WarehouseData {
@@ -357,7 +373,7 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
         ownerName: '',
         email: '',
         phone: '',
-        warehouses:[]
+        warehouses: []
       }
     }
   }
@@ -424,32 +440,44 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
   }
   mapStockHolding(data: StockData) {
     this.myStockHoldingForm.get('stkhold-list')?.setValue(data.stockHoldings);
-    this.myStockHoldingForm.get('cm')?.setValue( data.stockHoldings.length > 0 ? ((data.stockHoldings as any)[0] as stockHoldingData).warehouse.company : '');
+    this.myStockHoldingForm.get('cm')?.setValue(data.stockHoldings.length > 0 ? ((data.stockHoldings as any)[0] as stockHoldingData).warehouse.company : '');
   }
-  mapStockUnit(data:StockData){
-    let baseUom:any='';
-    for(let i=0; i<data.uomStocks.length; i++){
-      if((data.uomStocks[i] as any).base == this.pgService.ENUM.STATUS.True.code){
+  mapStockUnit(data: StockData) {
+    let baseUom: any = '';
+    for (let i = 0; i < data.uomStocks.length; i++) {
+      if ((data.uomStocks[i] as any).base == this.pgService.ENUM.STATUS.True.code) {
         baseUom = data.uomStocks[i];
-      }else{
+      } else {
         let suList = this.stockUnitForm.get('stockunit-setup-list')?.value;
-        suList.push(data.uomStocks[i] )
-
+        suList.push(data.uomStocks[i])
       }
     }
-    if(baseUom !== ''){
+    if (baseUom !== '') {
       this.base_stockUnitForm.get('id')?.setValue(baseUom.id);
       this.base_stockUnitForm.get('uom')?.setValue(baseUom.uom);
       this.base_stockUnitForm.get('price')?.setValue(baseUom.price);
       this.base_stockUnitForm.get('currency')?.setValue(baseUom.currency);
-      
+
     }
-    this.stockUnitForm.get('stockunit-list')?.setValue(
-      this.stockUnitForm.get('stockunit-list')?.value.filter((uom: UomData) => {
-        return this.stockUnitForm.get('stockunit-setup-list')?.value.filter((su: StockUomData) => {
-          return uom.id == su.uom.id
-      }).length > 0 ? false : true
-    }))
+    this.stockUnitForm.get('stockunit-idstring-list')?.setValue(
+      this.generateStringId()
+    )
+    if (this.stockUnitForm.get('stockunit-setup-list')?.value.length > 0)
+      this.base_stockUnitForm.get('uom')?.disable();
+  }
+  generateStringId(): string {
+    const spUom = this.stockUnitForm.get('stockunit-setup-list')?.value;
+    const baseId = (this.base_stockUnitForm.get('uom')?.value as UomData).id;
+    const setUpId = spUom.reduce((a: any, c: StockUomData) => {
+      return a === '' ? (a + '' + c.uom.id) : (a + ',' + c.uom.id);
+    }, '');
+    return baseId + ',' + setUpId;
+  }
+  generateStringId_byValue(value: any): string {
+    return value.reduce((a: string, c: string) => {
+      return a === '' ? (a + '' + c) : (a + ',' + c);
+    }, '');
+
   }
 
   bindAdditionalStockUnit(): StockUomData {
@@ -483,11 +511,11 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
   }
   bindBaseStockUnit(): StockUomData {
     let stockuom = this._getStockUomModel();
-    stockuom.id = this.base_stockUnitForm.get('')?.value;
-    stockuom.code = this.base_stockUnitForm.get('')?.value;
-    stockuom.name = this.base_stockUnitForm.get('')?.value;
-    stockuom.status = this.base_stockUnitForm.get('')?.value;
-    stockuom.cdate = this.base_stockUnitForm.get('')?.value;
+    stockuom.id = this.base_stockUnitForm.get('id')?.value;
+    stockuom.code = '';
+    stockuom.name = '';
+    stockuom.status = 1;
+    stockuom.cdate = '';
     stockuom.specficPrice = 0.0;
     stockuom.base = this.pgService.ENUM.STATUS.True.code;
     stockuom.priceType = (() => {
@@ -544,6 +572,17 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     }
 
   }
+  baseUomChange() {
+    const setupUom = this.stockUnitForm.get('stockunit-setup-list')?.value;
+    for (let uom of setupUom) {
+      const baseUom: UomData = this.base_stockUnitForm.get('uom')?.value;
+      const basePrice: number = this.base_stockUnitForm.get('price')?.value;
+      if ((uom as StockUomData).priceType.code == '' + this.pgService.ENUM.PRICE_TYPE.ByRatio.code)
+        uom.price = basePrice * uom.ratio;
+      uom.currency = this.base_stockUnitForm.get('currency')?.value;
+      //uom.uom = baseUom
+    }
+  }
   editStockHolding(index: number) {
     this.mySubStockHoldingForm.setValue({
       'id': (this.myStockHoldingForm.get('stkhold-list')?.value)[index].id,
@@ -553,22 +592,47 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     });
     $('#modal-stockhold').appendTo("body").modal('show');
   }
-  openStockUnitModel() {
-    this.setup_stockUnitForm.setValue({
-      'id': '-1',
-      'uom': '',
-      'is-specific': false,
-      'price': 1,
-      'ratio': 1,
-    })
-    this.stockUnitForm.get('stockunit-list')?.setValue(
-      this.stockUnitForm.get('stockunit-list')?.value.filter((uom: UomData) => {
-        return this.stockUnitForm.get('stockunit-setup-list')?.value.filter((su: StockUomData) => {
-          return uom.id == su.uom.id
-      }).length > 0 ? false : true
-    }))
-    $('#modal-stockunit').appendTo("body").modal('show');
+  openStockUnitModal(index: number) {
+    if (index == -1) {
+      this.setup_stockUnitForm.setValue({
+        'id': '-1',
+        'uom': '',
+        'is-specific': false,
+        'price': 1,
+        'ratio': 1,
+      })
+      $('#modal-stockunit').appendTo("body").modal('show');
+    } else {
+      let stkUnitList = this.stockUnitForm.get('stockunit-setup-list')?.value;
+      let su: StockUomData = stkUnitList[index];
+      this.setup_stockUnitForm.setValue({
+        'id': su.id,
+        'uom': su.uom,
+        'is-specific': su.priceType.code == "" + this.pgService.ENUM.PRICE_TYPE.BySpecific.code ? true : false,
+        'price': su.price,
+        'ratio': su.ratio,
+      });
+
+      this.stockUnitForm.get('stockunit-idstring-list')?.setValue(
+        this.generateStringId_byValue(this.stockUnitForm.get('stockunit-idstring-list')?.value.split(',').filter((id: string) => {
+          return id !== su.uom.id;
+        }))
+      )
+
+      $('#modal-stockunit').appendTo("body").modal('show');
+
+      let modal = document.getElementById('modal-stockunit') as HTMLElement;
+      modal.addEventListener('hidden.bs.modal', () => {
+        this.stockUnitForm.get('stockunit-idstring-list')?.setValue(
+          this.generateStringId()
+        )
+      })
+    }
+    $(".btn-submit-newstockunit").click(() => {
+
+    });
   }
+
   selectChange() {
     console.log(document.getElementById('stock-uom-list'))
   }
@@ -583,9 +647,20 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
   }
   submitNewStockUnit() {
     let suflist = this.stockUnitForm.get('stockunit-setup-list')?.value;
-    suflist.push(this.bindAdditionalStockUnit());
+    const index = suflist.findIndex((e: StockUomData) => {
+      return e.uom.id == this.setup_stockUnitForm.get('uom')?.value.id
+    })
+    if (index !== -1) {
+      suflist[index] = this.bindAdditionalStockUnit();
+    } else {
+      this.stockUnitForm.get('stockunit-setup-list')?.setValue(
+        [...suflist, this.bindAdditionalStockUnit()]
+      )
+    }
+    this.stockUnitForm.get('stockunit-idstring-list')?.setValue(
+      this.generateStringId()
+    )
   }
-
   getStockById(id: string) {
     return new Promise((pro, reject) => {
       const url = this.pgService.config.url + "stock-setup/getbyid/" + id;
@@ -609,19 +684,22 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     if (obj.id === '-1') {
       this.save(obj);
     } else {
-      // this.update(obj);
+      this.update(obj);
     }
 
   }
   update(obj: any) {
+    console.log(obj)
+    
     const url = this.pgService.config.url + 'stock-setup/update'
     this.http.post(url, obj, this.pgService.getOptions()).subscribe(
-      (resp: any) => {
-        window.alert("Successfully updated");
-        this.router.navigate(['/price-type-list']);
+      (resp:any)=> {
+        if(resp.status == 200)
+        this.popupService.showAlert("Success");
       },
       (error) => {
-        alert("Server don't response. Try again!")
+        this.popupService.showAlert("Server don't response. Try again!");
+       
       }
     )
   }
@@ -630,11 +708,11 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     this.http.post(url, obj, this.pgService.getOptions()).subscribe(
       (resp: any) => {
         if (resp.status == 200) {
-          window.alert("Successfully saved");
-          //this.router.navigate(['/price-type-list']);
+          this.popupService.showAlert("Success");
         }
         else {
-          window.alert(resp.message)
+          this.popupService.showAlert(resp.message);
+        
         }
       },
       (error) => {
@@ -658,5 +736,12 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       }
     )
   }
- 
+  openImageCropper(e:any){
+    this.imageChooserEvent = e;
+    $('#modal-image-chooser').appendTo("body").modal('show');
+  }
+  setImage(e:any){
+
+  }
+
 }

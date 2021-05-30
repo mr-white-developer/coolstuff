@@ -64,8 +64,23 @@ public class UomStockService implements CrudTemplate<UomStock>{
 
 	@Override
 	public ViewResult<UomStock> updateById(UomStock data, RequestCredential crd,Connection conn) {
-		// TODO Auto-generated method stub
-		return null;
+		ViewResult<UomStock> rtn ;
+		Date today = new Date();
+		try{
+			data.setMdate( today);
+			if(data.getStatus()== ComEnum.RowStatus.Deleted.getCode()){
+				rtn = deleteById(data, crd, conn);
+			}else{
+				rtn = dao.update(data, conn);
+			}
+			
+		}catch(Exception e){
+			rtn = new ViewResult<>();
+			rtn.status = ComEnum.ErrorStatus.ServerError.getCode();
+			rtn.message = e.getMessage();
+			e.printStackTrace();
+		}
+		return rtn;
 	}
 
 	@Override

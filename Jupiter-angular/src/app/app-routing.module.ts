@@ -14,6 +14,7 @@ import { PacksizeListComponent } from './packsize-list/packsize-list.component';
 import { PacksizeSetupComponent } from './packsize-setup/packsize-setup.component';
 import { PacktypeListComponent } from './packtype-list/packtype-list.component';
 import { PacktypeSetupComponent } from './packtype-setup/packtype-setup.component';
+import { PopupComponent } from './popup/popup.component';
 import { PriceTypeListComponent } from './price-type-list/price-type-list.component';
 import { PriceTypeSetupComponent } from './price-type-setup/price-type-setup.component';
 import { StockListComponent } from './stock-list/stock-list.component';
@@ -95,7 +96,9 @@ const routes: Routes = [
   {
     path: 'stock-setup', component: StockSetupComponent
   },
-  
+  {
+    path: 'popup', component: PopupComponent
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],

@@ -1,0 +1,13 @@
+<div class="card">
+    <image-cropper #imgcrop
+    [imageChangedEvent]="imageChangedEvent" 
+    [maintainAspectRatio]="true" 
+    [aspectRatio]="1 / 1"
+    format="png" 
+    [autoCrop]="false"
+    (imageCropped)="imageCropped($event)" 
+    (imageLoaded)="imageLoaded()" 
+    (cropperReady)="cropperReady()"
+    (loadImageFailed)="loadImageFailed()"></image-cropper>
+    <button class="btn btn-primary" (click)="finishedCropImage()">Crop Image</button>
+</div>

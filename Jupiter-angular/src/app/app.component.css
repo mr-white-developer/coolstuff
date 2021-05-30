@@ -54,3 +54,6 @@
     right: 10px;
     top: 60px;
 }
+.toast-container{
+    position: fixed; bottom: 5px; right: 5px; 
+}
