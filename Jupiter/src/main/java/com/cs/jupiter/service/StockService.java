@@ -122,7 +122,7 @@ public class StockService implements CrudTemplate<Stock> {
 			}
 			conn.commit();
 			vr = new ViewResult<Stock>(ComEnum.ErrorStatus.Success.getCode(), "");
-
+			vr.data = d;
 		} catch (Exception e) {
 			vr = new ViewResult<Stock>();
 			vr.status = ComEnum.ErrorStatus.ServerError.getCode();
@@ -176,7 +176,7 @@ public class StockService implements CrudTemplate<Stock> {
 			}
 			conn.commit();
 			rtn = new ViewResult<Stock>(ComEnum.ErrorStatus.Success.getCode(), "");
-			
+			rtn.data = data;
 		}catch(Exception e){
 			rtn = new ViewResult<Stock>();
 			rtn.status = ComEnum.ErrorStatus.ServerError.getCode();
@@ -246,7 +246,6 @@ public class StockService implements CrudTemplate<Stock> {
 	public ViewResult<Stock> getAll(Stock data, RequestCredential crd, Connection conn) {
 		ViewResult<Stock> rtn;
 		try{
-			System.out.println(env.getProperty("domain"));
 			rtn = stkDao.getAll(data, conn);
 			if(rtn.status != ComEnum.ErrorStatus.Success.getCode()){
 				
@@ -254,6 +253,7 @@ public class StockService implements CrudTemplate<Stock> {
 			for(Stock s: rtn.list){
 				s.getStockHoldings().addAll(stockHoldingDao.getAll(s.getId(), conn).list);
 				s.getUomStocks().addAll(uomStockDao.getAll(s.getId(), conn).list);
+				s.getImages().addAll(getStockImage(s.getId(), crd, conn).list);
 			}
 		}catch (Exception e){
 			rtn = new ViewResult<Stock>();
@@ -270,12 +270,12 @@ public class StockService implements CrudTemplate<Stock> {
 	public ViewResult<Stock> getById(String id, RequestCredential crd, Connection conn) {
 		ViewResult<Stock> rtn ;
 		try{
-			ViewResult<Stock> list = getAll(new Stock(id),crd,conn);
-			if(list.status == ComEnum.ErrorStatus.Success.getCode() && list.list.size()==1){
-				rtn = list;
-				rtn.data = list.list.get(0);
+			rtn = getAll(new Stock(id),crd,conn);
+			if(rtn.status == ComEnum.ErrorStatus.Success.getCode() && rtn.list.size()==1){
+				rtn.data = rtn.list.get(0);
 				rtn.list = null;
 				rtn.status = ComEnum.ErrorStatus.Success.getCode();
+				System.out.println("image len:"+ rtn.data.getImages().size());
 			}else{
 				throw new Exception("no item with given id");
 			}
@@ -289,7 +289,8 @@ public class StockService implements CrudTemplate<Stock> {
 		ViewResult<ImageData> rtn = null;
 		try{
 			ImageData img = new ImageData();
-			img.setId(id);
+			img.setId("-1");
+			img.setForeignKey(id);
 			rtn = imgService.getAll(img, crd, conn);
 		}catch(Exception e){
 			rtn = new ViewResult<>(ComEnum.ErrorStatus.ClientError.getCode(), e.getMessage());

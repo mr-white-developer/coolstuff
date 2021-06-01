@@ -15,7 +15,7 @@ export interface CompanyData {
     ownerName: string,
     email: string,
     phone: string,
-    warehouses:[]
+    warehouses: []
 }
 export interface WarehouseData {
     currentRow: number,
@@ -122,14 +122,14 @@ export interface StockData {
     name: string,
     status: number,
     cdate: string,
-    category: CategoryData
-    subCategory: SubCategoryData
-    brand: BrandData
-    packType: PriceTypeData
+    category: CategoryData,
+    subCategory: SubCategoryData,
+    brand: BrandData,
+    packType: PriceTypeData,
     packSize: PackSizeData,
-    stockHoldings: [],
-    uomStocks:[]
-
+    stockHoldings: any,
+    uomStocks: any,
+    images:any
 }
 export interface StockSetupData {
     stockHolding: [],
@@ -150,52 +150,52 @@ export interface stockHoldingData {
     qty: number,
     warehouse: WarehouseData,
     stock: StockData,
-    company:CompanyData,
+    company: CompanyData,
     rate: number
 }
-export interface CurrencyData{
-    currentRow:number,
-    maxRowsPerPage:number,
-    rowNumber:number,
-    id:string,
-    code:string,
-    name:string,
-    status:number,
-    cdate:string,
-    rate:number
+export interface CurrencyData {
+    currentRow: number,
+    maxRowsPerPage: number,
+    rowNumber: number,
+    id: string,
+    code: string,
+    name: string,
+    status: number,
+    cdate: string,
+    rate: number
 }
-export interface PricingData{
-    currentRow:number,
-    maxRowsPerPage:number,
-    rowNumber:number,
-    id:string,
-    code:string,
-    name:string,
-    status:number,
-    cdate:string,
+export interface PricingData {
+    currentRow: number,
+    maxRowsPerPage: number,
+    rowNumber: number,
+    id: string,
+    code: string,
+    name: string,
+    status: number,
+    cdate: string,
     currency: CurrencyData,
-    
-    price:number,
-    rate:number
+
+    price: number,
+    rate: number
 }
-export interface StockUomData{
-    currentRow:number,
-    maxRowsPerPage:number,
-    rowNumber:number,
-    id:string,
-    code:string,
-    name:string,
-    status:number,
-    cdate:string,
-    specficPrice:number,
-    base:number,
+export interface StockUomData {
+    currentRow: number,
+    maxRowsPerPage: number,
+    rowNumber: number,
+    id: string,
+    code: string,
+    name: string,
+    status: number,
+    cdate: string,
+    specficPrice: number,
+    base: number,
     priceType: PriceTypeData,
-    stock:StockData,
-    uom:UomData,
-    ratio:number,
+    stock: StockData,
+    uom: UomData,
+    ratio: number,
     currency: CurrencyData,
-    price:number,
-    rate:number
+    price: number,
+    rate: number
 }
 export interface ViewResult<T> {
     data: T;
@@ -205,5 +205,26 @@ export interface ViewResult<T> {
 }
 export interface sysconfig {
     url: string,
+    name: string,
+    token:string,
+    img_url:string
+}
+export interface ImageModelData {
+    id:string,
+    foreignKey: string,
+    path: any,
+    defaults: boolean,
+    comment: string,
+    code: string,
     name: string
+
+}
+export interface ImageProp {
+    id:string,
+    color: string,
+    src: any,
+    isDef: boolean,
+    comment: string,
+    name: string,
+    fileType:string
 }

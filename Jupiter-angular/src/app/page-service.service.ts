@@ -14,7 +14,9 @@ export class PageServiceService {
 
   config: sysconfig = {
     "url": "http://localhost:8087/os/",
-    "name": ""
+    "img_url" : "http://localhost:8087/jpimageloader/",
+    "name": "",
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDT09MU1RVRkZfU09GVCIsImlkMSI6IiIsImlkMiI6IiIsImlkMyI6dHJ1ZSwiaWQ0IjoiMjAyMS0wNS0zMSAyMjo1NjoyNyIsImlhdCI6MTYyMjQ3ODM4NywiZXhwIjoxNjIyNDc5Mjg3LCJqdGkiOiJkYWY5ZmU4YS0yNjY5LTQyMjUtODVmYy1hZTAzNTgyMTFjZTAifQ.iNI3lbZFpHUMbO18DbPIOAACc9gBo7A4TnXAHcfB820"
   }
   loginUser = {
     'company_id': ''
@@ -74,6 +76,14 @@ export class PageServiceService {
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
+        'api-token': '',
+      }),
+    };
+    return options;
+  }
+  getOptionsMultiPart(){
+    const options = {
+      headers: new HttpHeaders({
         'api-token': '',
       }),
     };
@@ -304,5 +314,19 @@ export class PageServiceService {
     this.authen = n;
     return n;
   }
+  dataURLtoFile(dataurl:any, filename:any) {
+ 
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new File([u8arr], filename, {type:mime});
+}
 
 }

@@ -30,28 +30,37 @@
                         style="font-size: small;">{{myForm.get('stock-cdate')?.value | date:'longDate'}}</span>
                 </div>
             </div>
-
             <div class="card-body" [hidden]="!edit">
-                <div class="row">
-                    <div class="col-4">
-                        <img class="rounded-3" src="https://picsum.photos/200/200" alt="Product" (click)="imageChooser.click()">
-                        <input type="file" hidden #imageChooser (change)="openImageCropper($event)">
+                <div class="row row-cols-auto">
+                    <div class="col mb-2">
+                        <div class="card me-5">
+                            <div style="width: 150px; height: 150px">
+                                <img class="rounded-3" [src]="defImg.src" alt="Product"
+                                    style="width: 150px; height: 150px;object-fit: cover"
+                                    (error)="defImg.src = 'assets/img/def-stock.jpg'">
+                            </div>
+
+                        </div>
                     </div>
                     <div class="col">
-                        <div class="row g-2 mb-3">
-                            <div class="col-md position-relative">
-                                <label for="setup-stock-name" class="form-label-sm mb-1">Name</label>
-                                <input type="text" class="form-control form-control-sm" id="setup-stock-name"
-                                    [readonly]="!edit" formControlName="stock-name">
+                        <div class="row gx-3 ">
+                            <div class="col position-relative">
+                                <div class="form-floating mb-2">
+                                    <input type="text" class="form-control" id="setup-stock-name"
+                                        formControlName="stock-name" placeholder="name">
+                                    <label for="setup-stock-name">Name</label>
+                                </div>
                                 <span class="text-danger "
                                     *ngIf="!myForm.get('stock-name')?.valid && myForm.get('stock-name')?.touched">
                                     Please enter valid name
                                 </span>
                             </div>
-                            <div class="col-md position-relative">
-                                <label for="setup-stock-id" class="form-label-sm mb-1">Id</label>
-                                <input type="text" class="form-control form-control-sm" id="etup-stock-id"
-                                    [readonly]="!edit" formControlName="stock-code">
+                            <div class="col position-relative">
+                                <div class="form-floating  mb-2">
+                                    <input type="text" class="form-control form-control-sm" id="setup-stock-id"
+                                        [readonly]="!edit" formControlName="stock-code" placeholder="id">
+                                    <label for="setup-stock-id" class="form-label-sm mb-1">Id</label>
+                                </div>
                                 <span class="text-danger "
                                     *ngIf="!myForm.get('stock-code')?.valid && myForm.get('stock-code')?.touched">
                                     Please enter valid id (*****)
@@ -59,24 +68,30 @@
                             </div>
 
                         </div>
-
-                        <div class="row g-2 mb-3">
+                        <div class="row gx-3 row-cols-2">
                             <div class="col-md position-relative">
-                                <label class="form-label-sm mb-1" for="brandowner-radiogroup">Manufactured by</label>
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text">BrandOwner</span>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Select"
-                                        [value]="myForm.get('brand-owner')?.value == '' ? '' : myForm.get('brand-owner')?.value.name"
-                                        readonly data-bs-toggle="collapse" data-bs-target="#brandowner-list-box">
-                                    <span class="input-group-text">Brand</span>
-                                    <input type="text" class="form-control form-control-sm" readonly
-                                        placeholder="Select"
-                                        [value]="myForm.get('brand')?.value == '' ? '' : myForm.get('brand')?.value.name">
-                                    <span class="input-group-text dropdown-toggle list-hover" data-bs-toggle="collapse"
-                                        data-bs-target="#brandowner-list-box"></span>
+                                <div class="row gx-2">
+                                    <div class="col ">
+                                        <div class="form-floating  mb-2">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Select"
+                                                [value]="myForm.get('brand-owner')?.value == '' ? '' : myForm.get('brand-owner')?.value.name"
+                                                readonly data-bs-toggle="collapse" id="brandowner-input"
+                                                data-bs-target="#brandowner-list-box">
+                                            <label class="form-label-sm" for='brandowner-input'>Brand Owner</label>
+
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating  mb-2">
+                                            <input type="text" class="form-control form-control-sm" readonly
+                                                placeholder="Select"
+                                                [value]="myForm.get('brand')?.value == '' ? '' : myForm.get('brand')?.value.name"
+                                                id="brand-input" data-bs-toggle="collapse"
+                                                data-bs-target="#brandowner-list-box">
+                                            <label class="form-label-sm" for='brand-input'>Brand</label>
+                                        </div>
+                                    </div>
                                 </div>
-
-
                                 <div class="collapse" id="brandowner-list-box">
                                     <div class="card-body card mt-2">
                                         <ul style="list-style: none;">
@@ -106,18 +121,27 @@
 
                             </div>
                             <div class="col-md position-relative">
-                                <label class="form-label-sm mb-1" for="category-radiogroup">Group</label>
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text">Category</span>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Select"
-                                        [value]="myForm.get('category')?.value == '' ? '' : myForm.get('category')?.value.name"
-                                        readonly>
-                                    <span class="input-group-text">SubCategory</span>
-                                    <input type="text" class="form-control form-control-sm" readonly
-                                        placeholder="Select"
-                                        [value]="myForm.get('sub-category')?.value == '' ? '' : myForm.get('sub-category')?.value.name">
-                                    <span class="input-group-text list-hover dropdown-toggle" data-bs-toggle="collapse"
-                                        data-bs-target="#category-list-box"></span>
+                                <div class="row gx-2">
+                                    <div class="col">
+                                        <div class="form-floating mb-2">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Select"
+                                                [value]="myForm.get('category')?.value == '' ? '' : myForm.get('category')?.value.name"
+                                                id="cat-select" data-bs-toggle="collapse"
+                                                data-bs-target="#category-list-box" readonly>
+                                            <label class="form-label form-label-sm" for="cat-select">Category</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating mb-2">
+                                            <input type="text" class="form-control form-control-sm" readonly
+                                                placeholder="Select"
+                                                [value]="myForm.get('sub-category')?.value == '' ? '' : myForm.get('sub-category')?.value.name"
+                                                data-bs-toggle="collapse" data-bs-target="#category-list-box"
+                                                id="sub-cat-select">
+                                            <label class="form-label form-label-sm" for="sub-cat-select">Sub
+                                                category</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="collapse" id="category-list-box">
                                     <div class="card-body card mt-2">
@@ -149,16 +173,14 @@
 
                             </div>
                         </div>
-                        <div class="row g-2 mb-3">
+                        <div class="row gx-3 row-cols-2">
                             <div class="col-md position-relative">
-                                <label class="form-label-sm mb-1">Packaging</label>
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text"> Pack Type </span>
+                                <div class="form-floating mb-2">
                                     <input type="text" class="form-control form-control-sm" placeholder="Select"
                                         [value]="myForm.get('packtype')?.value == '' ? '' : myForm.get('packtype')?.value.name"
-                                        readonly>
-                                    <span class="input-group-text dropdown-toggle list-hover" data-bs-toggle="collapse"
-                                        data-bs-target="#packtype-list-box"> </span>
+                                        id="packtype-input" data-bs-toggle="collapse"
+                                        data-bs-target="#packtype-list-box" readonly>
+                                    <label class="form-label form-label-sm" for="packtype-input">Pack Type </label>
                                 </div>
                                 <div class="collapse" id="packtype-list-box">
                                     <div class="card-body card mt-2">
@@ -178,15 +200,14 @@
 
                             </div>
                             <div class="col-md position-relative">
-                                <label class="form-label-sm mb-1" for="category-radiogroup">Packaging</label>
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text dropdown-toggle"> Pack Size </span>
+                                <div class="form-floating mb-2">
                                     <input type="text" class="form-control form-control-sm" placeholder="Select"
                                         [value]="myForm.get('packsize')?.value == '' ? '' : myForm.get('packsize')?.value.name"
-                                        readonly>
-                                    <span class="input-group-text dropdown-toggle list-hover" data-bs-toggle="collapse"
-                                        data-bs-target="#packsize-list-box"></span>
+                                        id="packsize-input" data-bs-toggle="collapse"
+                                        data-bs-target="#packsize-list-box" readonly>
+                                    <label class="form-label form-label-sm" for="packsize-input">Pack Type </label>
                                 </div>
+
                                 <div class="collapse" id="packsize-list-box">
                                     <div class="card-body card mt-2">
                                         <ul style="list-style: none;">
@@ -204,8 +225,8 @@
 
                             </div>
                         </div>
-                        <div class="row g-1 mb-3">
-                            <div class="col-md position-relative form-check">
+                        <div class="row mb-3">
+                            <div class="col-md position-relative form-check ms-3">
                                 <input type="checkbox" class="form-check-input" id="setup-stock-status"
                                     formControlName='stock-status' [readonly]="!edit">
                                 <label for="setup-stock-status" class="form-check-label ">Status</label>
@@ -213,10 +234,37 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </form>
+        <div class="card mb-2">
+            <div class="card-header">
+                <div class="card-title">Image
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="flexbin flexbin-margin">
+                            <a *ngFor="let p of images; let i = index"  class="img__wrap"
+                                [hidden]="p.src == defImg.src">
+                                <img [src]="p.src" />
+                                <span class="img__description">
+                                    <ul style="list-style: none; list-style-type: none;" class="px-2 py-2">
+                                        <li class="list-hover-imgtag " (click)="setDefImage(i);"><span>Set profile</span></li>
+                                        <li class="list-hover-imgtag "><span >Remove</span></li>
+                                    </ul>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn" (click)="choose.click()">Choose product image</button>
+                <button class="btn" (click)="test()">Choose product image</button>
+                <input #choose type="file" multiple (change)="loadImage($event)" hidden>
+            </div>
+        </div>
         <form [formGroup]='myStockHoldingForm' class="card mb-2">
             <div class="card-header">
                 <div class="card-title">Warehouse detail<span class="text-primary ms-3"
@@ -279,24 +327,31 @@
                         </ul>
                     </div>
                     <div class="col-md position-relative">
-                        <label for="base-stock-uom-list" class="form-label form-label-sm">Base Stock Unit</label>
-                        <select class="form-select form-select-sm" formControlName="uom" id="base-stock-uom-list"
-                            (change)="baseUomChange()">
-                            <option value=''>-</option>
-                            <option [ngValue]="uom" [selected]="uom.id == base_stockUnitForm.get('uom')?.value.id"
-                                *ngFor="let uom of stockUnitForm.get('stockunit-list')?.value; let i=index">
-                                {{uom.name}}
-                            </option>
-                        </select>
+                        <div class="form-floating">
+                            <select class="form-select form-select-sm" formControlName="uom" id="base-stock-uom-list"
+                                (change)="baseUomChange()">
+                                <option value=''>-</option>
+                                <option [ngValue]="uom" [selected]="uom.id == base_stockUnitForm.get('uom')?.value.id"
+                                    *ngFor="let uom of stockUnitForm.get('stockunit-list')?.value; let i=index">
+                                    {{uom.name}}
+                                </option>
+                            </select>
+                            <label for="base-stock-uom-list" class="form-label form-label-sm">Base Stock Unit</label>
+                        </div>
+
+
                     </div>
                     <div class="col-md position-relative" *ngIf="base_stockUnitForm.get('currency')?.value !== ''">
-                        <label for="base-stock-uom-list" class="form-label form-label-sm">Price</label>
-                        <div class="input-group input-group-sm">
 
+
+                        <div class="form-floating col">
                             <input type="number" class="form-control-sm form-control" formControlName="price"
-                                (change)="baseUomChange()">
-                            <div class="input-group-text">{{base_stockUnitForm.get('currency')?.value.code}}</div>
+                                placeholder="price" (change)="baseUomChange()" id="price">
+                            <label for="price" class="form-label form-label-sm">Price
+                                {{base_stockUnitForm.get('currency')?.value.code}}</label>
                         </div>
+
+
                     </div>
                 </div>
 
@@ -469,7 +524,8 @@
     <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content">
-            <app-img-cropper [imageChangedEvent]="imageChooserEvent" (resultImage)="setImage($event)" id="myCrop"></app-img-cropper>
+            <app-img-cropper [imageBase64]="imageBase64" (resultImage)="setDefImage2($event)" id="myCrop">
+            </app-img-cropper>
         </div>
 
     </div>

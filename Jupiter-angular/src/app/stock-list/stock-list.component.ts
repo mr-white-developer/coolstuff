@@ -85,7 +85,8 @@ export class StockListComponent implements OnInit, AfterViewInit {
       packType: this._getPackTypeModel(),
       packSize: this._getPackSizeModel(),
       stockHoldings: [],
-      uomStocks: []
+      uomStocks: [],
+      images:[]
     }
   }
   _getCategoryData(): CategoryData {

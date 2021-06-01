@@ -11,16 +11,27 @@ import com.jupitor.image.jpimageloader.model.ViewResult;
 import com.jupitor.image.jpimageloader.utility.Common;
 
 @Repository
-public class StockApi {
+public class Api {
 
 	@Autowired
 	Environment env;
 	
-	public ViewResult<ImageData> getStockImagePath(String id,String token){
+
+	public ViewResult<ImageData> getPath(String value,String token){
 		String apiurl = env.getProperty("api");
-		String url = apiurl + "stock-setup/get-image/".concat(id);
+		String url = apiurl + "image/find/".concat(value);
 		Gson gson = new Gson();
 		Type type = new TypeToken<ViewResult<ImageData>>() {
+		}.getType();
+		return gson.fromJson(Common.httpGet(url, token), type);
+
+	}
+	public ViewResult<String> getPath(String token){
+		if(token.equals("na")) token = "";
+		String apiurl = env.getProperty("api");
+		String url = apiurl + "image/getpath";
+		Gson gson = new Gson();
+		Type type = new TypeToken<ViewResult<String>>() {
 		}.getType();
 		return gson.fromJson(Common.httpGet(url, token), type);
 

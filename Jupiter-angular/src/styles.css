@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+@import "flexbin.css"; 
 html,
 body {
     height: 100%;
@@ -14,6 +14,7 @@ body {
     --main-color-light : #E2E7EE;
     --main-color-danger : #E2E7EE;
     --body-background-color: #edf2f9;
+    
 }
 /* root page ***/
 .main-container {
@@ -32,6 +33,9 @@ body {
     border: none;
     font-weight: 500;
     font-size: 1.1rem;
+}
+.card-footer{
+    background-color: transparent;
 }
 .pg-header-menu {
     padding: 0px 5px 0px 5px;
@@ -64,6 +68,19 @@ body {
 .list-hover-danger:hover {
     cursor: pointer;
     color: var(--bs-red);
+    /* border-top: solid 0.5px var(--border-color);
+    border-bottom: solid 0.5px var(--border-color); */
+}
+.list-hover-imgtag {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    /* border-top: solid 0.5px var(--border-color);
+    border-bottom: solid 0.5px var(--border-color); */
+}
+.list-hover-imgtag:hover {
+    background-color: #00000094;
+    color: white;
     /* border-top: solid 0.5px var(--border-color);
     border-bottom: solid 0.5px var(--border-color); */
 }
@@ -157,3 +174,6 @@ input.ng-touched.ng-invalid {
 .input-group-text{
     background-color: whitesmoke;
 }
+
+
+/*  */

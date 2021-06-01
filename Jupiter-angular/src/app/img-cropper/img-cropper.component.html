@@ -1,6 +1,6 @@
 <div class="card">
     <image-cropper #imgcrop
-    [imageChangedEvent]="imageChangedEvent" 
+    [imageBase64] = "imageBase64"
     [maintainAspectRatio]="true" 
     [aspectRatio]="1 / 1"
     format="png" 

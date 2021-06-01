@@ -16,7 +16,7 @@ public class ImageData extends ViewCredential {
 	}
 	public ImageData(){
 		super();
-		this.foreignKey = null;
+		this.foreignKey = "-1";
 		this.path = "";
 		this.defaults = false;
 		this.comment = "";

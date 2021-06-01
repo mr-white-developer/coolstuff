@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, Component, Injector, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotifierComponent } from '../notifier/notifier.component';
@@ -20,6 +20,7 @@ export class EntryComponent implements OnInit, AfterViewInit {
 
   event: any = null;
   croppedImage: any;
+  files:any;
   constructor(private load: PopupService,
     injector: Injector,
     private http: HttpClient,
@@ -43,7 +44,8 @@ export class EntryComponent implements OnInit, AfterViewInit {
 
   }
   fileChangeEvent(e: any) {
-    this.event = e;
+    const input = e.srcElement;
+    this.files = input.files;
   }
   finishedCropper(e: any) {
     this.croppedImage = e;
@@ -65,6 +67,24 @@ export class EntryComponent implements OnInit, AfterViewInit {
     let caller = this.http.get(url, this.service.getOptions()).subscribe(
       (d: any) => {
         this.croppedImage = d;
+      }
+    )
+  }
+  postMultiPath(){
+    let form = new FormData();
+    for(let f of this.files){
+      console.log(f)
+      form.append('uploadedfile', f, f.type);
+    }
+    form.append('info', "hello");
+    const url = this.service.config.url + "upload/fileupload";
+    this.http.post(url,form,{
+      headers: new HttpHeaders({
+        'api-token': '',
+      }),
+    }).subscribe(
+      (data:any)=>{
+        alert(data)
       }
     )
   }

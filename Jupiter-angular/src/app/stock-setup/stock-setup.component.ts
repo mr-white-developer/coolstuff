@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { syntaxError } from '@angular/compiler';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { BrandData, BrandOwnerData, CategoryData, CompanyData, CurrencyData, PackSizeData, PriceTypeData, PricingData, StockData, stockHoldingData, StockSetupData, StockUomData, SubCategoryData, UomData, ViewResult, WarehouseData } from '../model';
+import { Observable } from 'rxjs';
+import { BrandData, BrandOwnerData, CategoryData, CompanyData, CurrencyData, ImageModelData, ImageProp, PackSizeData, PriceTypeData, PricingData, StockData, stockHoldingData, StockSetupData, StockUomData, SubCategoryData, UomData, ViewResult, WarehouseData } from '../model';
 import { PageServiceService } from '../page-service.service';
 import { PopupService } from '../popup.service';
 declare var $: any;
@@ -14,9 +14,12 @@ declare var $: any;
   styleUrls: ['./stock-setup.component.css']
 })
 export class StockSetupComponent implements OnInit, AfterViewInit {
+  images: any = [];
+  defImg: any = this._getImgPro();
+  defImgIndex: number = -1;
+  imageBase64: any = '';
 
   edit: boolean = false;
-
   roles = {
     button: {
       save: true,
@@ -25,7 +28,7 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       edit: true
     }
   }
-  imageChooserEvent:any = '';
+
   myForm: FormGroup = new FormGroup({
     'stock-id': new FormControl('-1'),
     'stock-name': new FormControl('',
@@ -144,8 +147,6 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
           this.myForm.get('stock-code')?.setValue('');
           this.myForm.get('stock-status')?.setValue(true);
           this.myForm.get('stock-cdate')?.setValue(this.pgService.getDateString(new Date()));
-
-
           $('#btn-stock-save').show();
         } else {
           this.popupService.showLoading("").then((e: any) => {
@@ -156,17 +157,17 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
                 this.mapStockHolding(resp);
                 this.mapStockUnit(resp);
                 e.dismiss();
-                this.edit = true;
+
               }
             ).catch(() => { e.dismiss() })
             this.editOn();
           })
 
         }
+        this.edit = true;
+        this.editOn();
       }
     );
-    console.log(this.myForm.get('brand-owner')?.value)
-
   }
 
   ngOnInit(): void {
@@ -222,7 +223,8 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       packType: this._getPackTypeModel(),
       packSize: this._getPackSizeModel(),
       stockHoldings: [],
-      uomStocks: []
+      uomStocks: [],
+      images: []
     }
   }
   _getCategoryData(): CategoryData {
@@ -422,6 +424,28 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       ratio: 0
     }
   }
+  _getImageDataModel(): ImageModelData {
+    return {
+      id: "",
+      foreignKey: '',
+      path: '',
+      defaults: false,
+      comment: "",
+      code: "",
+      name: ""
+    }
+  }
+  _getImgPro(): ImageProp {
+    return {
+      id: '-1',
+      color: '',
+      src: '',
+      isDef: false,
+      comment: '',
+      name: '',
+      fileType: ''
+    }
+  }
 
   mapStock(data: StockData) {
     this.myForm.get('stock-id')?.setValue(data.id);
@@ -435,7 +459,15 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
     this.myForm.get('sub-category')?.setValue(data.subCategory);
     this.myForm.get('packtype')?.setValue(data.packType);
     this.myForm.get('packsize')?.setValue(data.packSize)
-
+    for (let img of data.images) {
+      let m = img as ImageModelData;
+      let imagePro = this._getImgPro();
+      imagePro.id = m.id;
+      imagePro.src = this.pgService.config.img_url + 'img/get/' + m.name + '/na';
+      imagePro.isDef = m.defaults
+      if (imagePro.isDef) this.defImg = imagePro
+      this.images.push(imagePro);
+    }
 
   }
   mapStockHolding(data: StockData) {
@@ -634,7 +666,6 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
   }
 
   selectChange() {
-    console.log(document.getElementById('stock-uom-list'))
   }
   bindSelect() {
     let pp = this.stockUnitForm.get('stockunit-list')?.value;
@@ -678,47 +709,61 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       )
     })
   }
-  submit() {
+  async submit() {
+    const loading = await this.popupService.showLoading("Processing..").then((e: any) => { return e });
+    loading.present();
     let obj = this.bindStock();
-    console.log(obj)
+    let rs: any = null;
     if (obj.id === '-1') {
-      this.save(obj);
+      await this.save(obj).then((e: ViewResult<StockData>) => { rs = e })
     } else {
-      this.update(obj);
+      await this.update(obj).then((e: ViewResult<StockData>) => { rs = e })
     }
+
+    if (rs !== null) {
+      if (rs.status == 200) {
+        this.saveImage(rs.data as StockData).then((e: any) => {
+          loading.dismiss();
+          if (e.status == 200) {
+            loading.dismiss();
+          } else {
+            loading.dismiss();
+          }
+        })
+
+      }
+    }
+
 
   }
   update(obj: any) {
-    console.log(obj)
-    
-    const url = this.pgService.config.url + 'stock-setup/update'
-    this.http.post(url, obj, this.pgService.getOptions()).subscribe(
-      (resp:any)=> {
-        if(resp.status == 200)
-        this.popupService.showAlert("Success");
-      },
-      (error) => {
-        this.popupService.showAlert("Server don't response. Try again!");
-       
-      }
-    )
+    return new Promise<ViewResult<StockData>>((resolve, reject) => {
+      const url = this.pgService.config.url + 'stock-setup/update'
+      this.http.post(url, obj, this.pgService.getOptions()).subscribe(
+        (resp: any) => {
+          resolve(resp);
+        },
+        (error) => {
+          reject();
+
+        }
+      )
+    });
+
   }
   save(obj: any) {
-    const url = this.pgService.config.url + 'stock-setup/save'
-    this.http.post(url, obj, this.pgService.getOptions()).subscribe(
-      (resp: any) => {
-        if (resp.status == 200) {
-          this.popupService.showAlert("Success");
+    return new Promise<ViewResult<StockData>>((resolve, reject) => {
+      const url = this.pgService.config.url + 'stock-setup/save'
+      this.http.post(url, obj, this.pgService.getOptions()).subscribe(
+        (resp: any) => {
+          resolve(resp);
+        },
+        (error) => {
+          reject();
         }
-        else {
-          this.popupService.showAlert(resp.message);
-        
-        }
-      },
-      (error) => {
-        window.alert("Server Error")
-      }
-    )
+      )
+    })
+
   }
   delete() {
     const url = this.pgService.config.url + 'stock-setup/delete'
@@ -736,12 +781,112 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
       }
     )
   }
-  openImageCropper(e:any){
-    this.imageChooserEvent = e;
+  openImageCropper(e: any) {
     $('#modal-image-chooser').appendTo("body").modal('show');
   }
-  setImage(e:any){
+  async saveImage(stock: StockData) {
 
+    // const imageToBase64 = require('image-to-base64');
+    // let form = new FormData();
+    // for (let img of this.images) {
+    //   if (img.id !== "-1") {
+    //     await imageToBase64(img.src) // Path to the image
+    //       .then(
+    //         (rs: any) => {
+    //           img.src = rs;
+    //         }
+    //       )
+    //       .catch(
+
+    //       )
+    //   }
+    //   const file: File = this.pgService.dataURLtoFile(img.src, img.name);
+    //   img.fileType = file.type;
+    //   img.name = file.name;
+    //   console.log(file)
+    //   form.append('file', file, this.generateImageProperties(img));
+    // }
+
+    // return new Promise((resolve, reject) => {
+    //   if (this.images.length == 0) resolve(200);
+
+
+
+    //   let form = new FormData();
+    //   for (let img of this.images) {
+
+
+    //     const file: File = this.pgService.dataURLtoFile(img.src, img.name);
+    //     img.fileType = file.type;
+    //     img.name = file.name;
+    //     form.append('file', file, this.generateImageProperties(img));
+
+
+    //   }
+    //   form.append('pid', stock.id);
+    //   resolve(200)
+    //   const url = this.pgService.config.url + 'upload/fileupload';
+    //   this.http.post(url, form, this.pgService.getOptionsMultiPart()).subscribe(
+    //     (d) => {
+    //       resolve(d)
+    //     },
+    //     error => {
+    //       reject();
+    //     }
+    //   )
+    // })
+
+  }
+  generateImageProperties(f: ImageProp): string {
+    return f.id + ':'
+      + f.fileType + ':'
+      + (f.isDef ? 1 : 0) + ':'
+      + (f.color == '' ? 'NAN' : f.color) + ':'
+      + (f.comment == '' ? 'NAN' : f.comment);
+  }
+  loadImage(e: any) {
+    this.images = [];
+    const input = e.srcElement;
+    for (let f of input.files) {
+      let image = this._getImgPro();
+      let reader = new FileReader();
+      reader.onload = (e: any) => {
+        image.src = e.target.result;
+        image.name = f.name;
+        this.images.push(image);
+      }
+      reader.readAsDataURL(f);
+    }
+  }
+
+  setDefImage(i: number) {
+    for (let im of this.images) {
+      im.isDef = false;
+    }
+    this.images[i].isDef = true;
+    this.defImg = this.images[i];
+  }
+  setDefImage2(e: any) {
+    this.images[this.defImgIndex].src = e;
+    this.images[this.defImgIndex].isDef = true;
+    this.defImg = this.images[this.defImgIndex];
+    $('#modal-image-chooser').appendTo("body").modal('hide');
+  }
+  test(){
+    for(let i of this.images){
+      console.log(this.urlToFile(i.src))
+    }
+  }
+  urlToFile(url:any){
+    return fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+     }));
+   
   }
 
 }
