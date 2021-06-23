@@ -13,10 +13,10 @@ export class PageServiceService {
   alertHtmlElement: any;
 
   config: sysconfig = {
-    "url": "http://localhost:8087/os/",
-    "img_url" : "http://localhost:8087/jpimageloader/",
+    "url": "http://localhost:8080/os/",
+    "img_url" : "http://localhost:8080/jpimageloader/",
     "name": "",
-    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDT09MU1RVRkZfU09GVCIsImlkMSI6IiIsImlkMiI6IiIsImlkMyI6dHJ1ZSwiaWQ0IjoiMjAyMS0wNS0zMSAyMjo1NjoyNyIsImlhdCI6MTYyMjQ3ODM4NywiZXhwIjoxNjIyNDc5Mjg3LCJqdGkiOiJkYWY5ZmU4YS0yNjY5LTQyMjUtODVmYy1hZTAzNTgyMTFjZTAifQ.iNI3lbZFpHUMbO18DbPIOAACc9gBo7A4TnXAHcfB820"
+    "token": ""
   }
   loginUser = {
     'company_id': ''

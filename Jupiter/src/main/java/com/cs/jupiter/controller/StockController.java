@@ -51,7 +51,14 @@ public class StockController extends RequestController{
 			@RequestBody Stock data,
 			HttpServletRequest req,HttpServletResponse resp){
 		try (Connection con = ds.getConnection()) {
-			return stkService.saveStockSetup(data, getReqHeader(req, resp), con);
+			con.setAutoCommit(false);
+			ViewResult<Stock> result = stkService.saveStockSetup(data, getReqHeader(req, resp), con);
+			if (result.status == ComEnum.ErrorStatus.Success.getCode()) {
+				con.commit();
+			} else {
+				con.rollback();
+			}
+			return result;
 		} catch (SQLException e) {
 			return new ViewResult<Stock>(ComEnum.ErrorStatus.DatabaseError.getCode(), e.getMessage());
 		}
@@ -61,7 +68,13 @@ public class StockController extends RequestController{
 			@RequestBody Stock data,
 			HttpServletRequest req,HttpServletResponse resp){
 		try (Connection con = ds.getConnection()) {
-			return stkService.updateStockSetup(data, getReqHeader(req, resp), con);
+			ViewResult<Stock> result =  stkService.updateStockSetup(data, getReqHeader(req, resp), con);
+			if (result.status == ComEnum.ErrorStatus.Success.getCode()) {
+				con.commit();
+			} else {
+				con.rollback();
+			}
+			return result;
 		} catch (SQLException e) {
 			return new ViewResult<Stock>(ComEnum.ErrorStatus.DatabaseError.getCode(), e.getMessage());
 		}

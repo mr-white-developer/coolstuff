@@ -786,55 +786,48 @@ export class StockSetupComponent implements OnInit, AfterViewInit {
   }
   async saveImage(stock: StockData) {
 
-    // const imageToBase64 = require('image-to-base64');
+    //const imageToBase64 = require('image-to-base64');
     // let form = new FormData();
     // for (let img of this.images) {
-    //   if (img.id !== "-1") {
-    //     await imageToBase64(img.src) // Path to the image
-    //       .then(
-    //         (rs: any) => {
-    //           img.src = rs;
-    //         }
-    //       )
-    //       .catch(
+    //   // if (img.id !== "-1") {
+    //   //   await imageToBase64(img.src) // Path to the image
+    //   //     .then(
+    //   //       (rs: any) => {
+    //   //         img.src = rs;
+    //   //       }
+    //   //     )
+    //   //     .catch(
 
-    //       )
-    //   }
+    //   //     )
+    //   // }
     //   const file: File = this.pgService.dataURLtoFile(img.src, img.name);
     //   img.fileType = file.type;
     //   img.name = file.name;
     //   console.log(file)
     //   form.append('file', file, this.generateImageProperties(img));
-    // }
+   
 
-    // return new Promise((resolve, reject) => {
-    //   if (this.images.length == 0) resolve(200);
-
-
-
-    //   let form = new FormData();
-    //   for (let img of this.images) {
-
-
-    //     const file: File = this.pgService.dataURLtoFile(img.src, img.name);
-    //     img.fileType = file.type;
-    //     img.name = file.name;
-    //     form.append('file', file, this.generateImageProperties(img));
-
-
-    //   }
-    //   form.append('pid', stock.id);
-    //   resolve(200)
-    //   const url = this.pgService.config.url + 'upload/fileupload';
-    //   this.http.post(url, form, this.pgService.getOptionsMultiPart()).subscribe(
-    //     (d) => {
-    //       resolve(d)
-    //     },
-    //     error => {
-    //       reject();
-    //     }
-    //   )
-    // })
+    return new Promise((resolve, reject) => {
+      if (this.images.length == 0) resolve(200);
+      let form = new FormData();
+      for (let img of this.images) {
+        const file: File = this.pgService.dataURLtoFile(img.src, img.name);
+        img.fileType = file.type;
+        img.name = file.name;
+        form.append('file', file, this.generateImageProperties(img));
+      }
+      form.append('pid', stock.id);
+      //resolve(200)
+      const url = this.pgService.config.url + 'upload/fileupload';
+      this.http.post(url, form, this.pgService.getOptionsMultiPart()).subscribe(
+        (d) => {
+          resolve(d)
+        },
+        error => {
+          reject();
+        }
+      )
+    })
 
   }
   generateImageProperties(f: ImageProp): string {

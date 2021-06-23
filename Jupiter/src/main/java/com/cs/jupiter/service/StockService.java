@@ -77,7 +77,7 @@ public class StockService implements CrudTemplate<Stock> {
 	public ViewResult<Stock> saveStockSetup(Stock d, RequestCredential crd, Connection conn) {
 		ViewResult<Stock> vr;
 		try {
-			conn.setAutoCommit(false);
+			
 			Date today = new Date();
 			int status = -1;
 			Stock stock = d;
@@ -120,7 +120,7 @@ public class StockService implements CrudTemplate<Stock> {
 				}
 				
 			}
-			conn.commit();
+			
 			vr = new ViewResult<Stock>(ComEnum.ErrorStatus.Success.getCode(), "");
 			vr.data = d;
 		} catch (Exception e) {
@@ -174,7 +174,6 @@ public class StockService implements CrudTemplate<Stock> {
 					throw new Exception(rtnPricing.message);
 				}
 			}
-			conn.commit();
 			rtn = new ViewResult<Stock>(ComEnum.ErrorStatus.Success.getCode(), "");
 			rtn.data = data;
 		}catch(Exception e){

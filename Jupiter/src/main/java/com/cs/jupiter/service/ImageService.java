@@ -168,7 +168,7 @@ public class ImageService implements CrudTemplate<ImageData> {
 	private FileProperties getProperties(String rawFileName){
 		FileProperties pro = new FileProperties();
 		String[] pa = rawFileName.split(":");
-		if(pa.length == 4){
+		if(pa.length == 5){
 			pro.setId(pa[0]);
 			pro.setFiletype(pa[1]);
 			pro.setIsDefault(Integer.parseInt(pa[2]));
