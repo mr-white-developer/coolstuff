@@ -9,17 +9,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jupitor.image.jpimageloader.api.Api;
-import com.jupitor.image.jpimageloader.model.ImageData;
 import com.jupitor.image.jpimageloader.model.ViewResult;
 import com.jupitor.image.jpimageloader.utility.ComEnum;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/img")
 public class ImageController {
 	@Autowired

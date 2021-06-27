@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 import com.cs.jupiter.model.data.ViewResult;
 import com.cs.jupiter.model.table.Brand;
@@ -20,6 +21,9 @@ import com.cs.jupiter.utility.PrepareQuery;
 
 @Repository
 public class StockDao {
+	@Autowired
+	Environment env;
+	
 	@Autowired
 	BrandDao brandDao;
 	
@@ -68,12 +72,27 @@ public class StockDao {
 	public ViewResult<Stock> getAll(Stock data,Connection conn){
 		ViewResult<Stock> rtn = new ViewResult<>();
 		try{
-			String sql = "select row_number() over(order by stock.name asc) as row_num,count(*) over() as total, stock.* from stock"
-					+ " inner join category cat on cat.id = stock.fk_category"
-					+ " inner join subcategory subcat on subcat.id = fk_subcategory"
-					+ " inner join packtype pt on pt.id = stock.fk_packtype"
-					+ " inner join packsize ps on ps.id = stock.fk_packsize"
-					+ " inner join brand on brand.id = stock.fk_brand ";
+			PreparedStatement stmt;
+			String sql1 = "drop table if exists temp_stock;";
+			stmt = conn.prepareStatement(sql1);
+			stmt.executeUpdate();
+			String sql2 = "select stock.id as stk_id,company.id as com_id"
+					+" into temp table temp_stock"
+					+" from stock "
+					+" inner join stockholding on stockholding.fk_stock = stock.id"
+					+" inner join company on company.id = stockholding.fk_company"
+					+" group by stk_id,com_id;";
+			stmt = conn.prepareStatement(sql2);
+			stmt.executeUpdate();		
+			String sql3 = " select row_number() over(order by stock.name asc) as row_num,count(*) over() as total, stock.* "
+					+" from temp_stock "
+					+" inner join stock on stock.id = temp_stock.stk_id"
+					+" inner join company on company.id = temp_stock.com_id"
+					+" inner join category cat on cat.id = stock.fk_category"
+					+" inner join subcategory subcat on subcat.id = fk_subcategory"
+					+" inner join packtype pt on pt.id = stock.fk_packtype"
+					+" inner join packsize ps on ps.id = stock.fk_packsize"
+					+" inner join brand on brand.id = stock.fk_brand";
 			PrepareQuery ps = new PrepareQuery();
 			ps.add("stock.id", Long.parseLong(data.getId()),PrepareQuery.Operator.EQUAL,PrepareQuery.Type.ID);
 			ps.add("stock.code", data.getCode(),PrepareQuery.Operator.EQUAL, PrepareQuery.Type.VARCHAR);
@@ -110,9 +129,11 @@ public class StockDao {
 			ps.add("brand.name", data.getBrand().getName(),PrepareQuery.Operator.LIKE_ALL, PrepareQuery.Type.VARCHAR);
 			ps.add("brand.status", data.getBrand().getStatus(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.NUMBER);
 			}
-			sql += ps.createWhereStatement(data.getCurrentRow(), data.getMaxRowsPerPage(), "stock.name", "asc");
-			System.out.println(sql);
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			sql3 += ps.createWhereStatement(data.getCurrentRow(), data.getMaxRowsPerPage(), "stock.name", "asc");
+			stmt = conn.prepareStatement(sql3);
+			CommonUtility.outputLog(sql1, env);
+			CommonUtility.outputLog(sql2, env);
+			CommonUtility.outputLog(sql3, env);
 			ResultSet rs = stmt.executeQuery();
 			Stock s ;
 			while(rs.next()){
@@ -125,13 +146,19 @@ public class StockDao {
 				s.setStatus(rs.getInt("status"));
 				s.setCdate(rs.getDate("cdate"));
 				s.setMdate(rs.getDate("mdate"));
-				
-				s.setBrand(brandDao.getAll(new Brand(rs.getString("fk_brand")), conn).list.get(0));
-				s.setCategory(catDao.getAll(new Category(rs.getString("fk_category")), conn).list.get(0));
-				s.setSubCategory(subCatDao.getAll(new SubCategory(rs.getString("fk_subcategory")), conn).list.get(0));
-				s.setPackType(ptDao.getAll(new PackType(rs.getString("fk_packtype")), conn).list.get(0));
-				s.setPackSize(psDao.getAll(new PackSize(rs.getString("fk_packsize")), conn).list.get(0));
+				s.setBrand(new Brand(rs.getString("fk_brand")));
+				s.setCategory(new Category(rs.getString("fk_category")));
+				s.setSubCategory(new SubCategory(rs.getString("fk_subcategory")));
+				s.setPackType(new PackType(rs.getString("fk_packtype")));
+				s.setPackSize(new PackSize(rs.getString("fk_packsize")));
 				rtn.list.add(s);
+			}
+			for(Stock stock : rtn.list) {
+				stock.setBrand(brandDao.read(stock.getBrand().getId(), conn).data);
+				stock.setCategory(catDao.read(stock.getCategory().getId(), conn).data);
+				stock.setSubCategory(subCatDao.read(stock.getSubCategory().getId(), conn).data);
+				stock.setPackType(ptDao.read(stock.getPackType().getId(), conn).data);
+				stock.setPackSize(psDao.read(stock.getPackSize().getId(), conn).data);
 			}
 			rtn.status = ComEnum.ErrorStatus.Success.getCode();
 		}catch(Exception e){

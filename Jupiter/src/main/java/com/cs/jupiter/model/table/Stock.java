@@ -15,12 +15,13 @@ public class Stock extends ViewCredential{
 	private List<StockHolding> stockHoldings;
 	private List<UomStock> uomStocks;
 	private List<ImageData> images;
-	
+	private Company company;
 	public Stock(){
 		super();
 		this.stockHoldings = new ArrayList<>();
 		this.uomStocks = new ArrayList<>();
 		this.images = new ArrayList<>();
+		this.company = new Company();
 	}
 	public Stock(String id){
 		super();
@@ -98,6 +99,12 @@ public class Stock extends ViewCredential{
 	}
 	public void setImages(List<ImageData> images) {
 		this.images = images;
+	}
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	

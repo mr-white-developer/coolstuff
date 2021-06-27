@@ -88,6 +88,33 @@ public class PackSizeDao {
 		}
 		return rtn;
 	}
+	public ViewResult<PackSize> read(String id,Connection conn)  {
+		ViewResult<PackSize> rtn = new ViewResult<>();
+		try  {
+		String sql = "select * from packsize where id=?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setLong(1, Long.parseLong(id));
+		ResultSet rs = stmt.executeQuery();
+		PackSize b = null;
+		while (rs.next()){
+			b = new PackSize();
+			
+			b.setId(rs.getString("id"));
+			b.setCode(rs.getString("code"));
+			b.setName(rs.getString("name"));
+			b.setStatus(rs.getInt("status"));
+			b.setCdate(rs.getDate("cdate"));
+			b.setMdate(rs.getDate("mdate"));
+			rtn.data = b;
+		}
+		rtn.status = ComEnum.ErrorStatus.Success.getCode();
+		} catch (Exception e) {
+			rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+			rtn.message = e.getMessage();
+			e.printStackTrace();
+		}
+		return rtn;
+	}
 
 	public ViewResult<PackSize> update(PackSize data,Connection conn) throws Exception {
 		ViewResult<PackSize> rtn = new ViewResult<>();

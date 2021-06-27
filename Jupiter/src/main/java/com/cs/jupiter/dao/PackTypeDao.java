@@ -87,6 +87,33 @@ public class PackTypeDao {
 		}
 		return rtn;
 	}
+	public ViewResult<PackType> read(String id,Connection conn)  {
+		ViewResult<PackType> rtn = new ViewResult<>();
+		try  {
+		String sql = "select * from packtype where id=?";
+		
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setLong(1, Long.parseLong(id));
+		ResultSet rs = stmt.executeQuery();
+		PackType b = null;
+		if (rs.next()){
+			b = new PackType();
+			b.setId(rs.getString("id"));
+			b.setCode(rs.getString("code"));
+			b.setName(rs.getString("name"));
+			b.setStatus(rs.getInt("status"));
+			b.setCdate(rs.getDate("cdate"));
+			b.setMdate(rs.getDate("mdate"));
+			rtn.data = b;
+		}
+		rtn.status = ComEnum.ErrorStatus.Success.getCode();
+		} catch (Exception e) {
+			rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+			rtn.message = e.getMessage();
+			e.printStackTrace();
+		}
+		return rtn;
+	}
 
 	public ViewResult<PackType> update(PackType data,Connection conn) throws Exception {
 		ViewResult<PackType> rtn = new ViewResult<>();

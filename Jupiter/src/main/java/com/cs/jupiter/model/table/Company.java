@@ -11,6 +11,7 @@ public class Company extends ViewCredential{
 	private String email;
 	private String phone;
 	private List<Warehouse> warehouses;
+	private List<Stock> stocks;
 	
 	public Company(){
 		this.rowNumber = 0;
@@ -18,6 +19,7 @@ public class Company extends ViewCredential{
 		this.email = "";
 		this.phone = "";
 		this.warehouses = new ArrayList<>();
+		this.stocks = new ArrayList<>();
 		
 	}
 	public Company(String id){
@@ -53,5 +55,11 @@ public class Company extends ViewCredential{
 	}
 	public void setWarehouses(List<Warehouse> warehouses) {
 		this.warehouses = warehouses;
+	}
+	public List<Stock> getStocks() {
+		return stocks;
+	}
+	public void setStocks(List<Stock> stocks) {
+		this.stocks = stocks;
 	}
 }

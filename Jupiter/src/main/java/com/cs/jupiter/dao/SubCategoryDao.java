@@ -138,6 +138,45 @@ public class SubCategoryDao {
 		}
 		return rtn;
 	}
+	public ViewResult<SubCategory> read(String id, Connection conn) throws NumberFormatException, Exception {
+		ViewResult<SubCategory> rtn = new ViewResult<>();
+		try {
+
+			String sql = "select sub.id as sub_id," + "sub.code as sub_code," + "sub.name as sub_name,"
+					+ "sub.status as sub_status," + "sub.cdate as sub_cdate," + "sub.mdate as sub_mdate,"
+					+ "cat.id as cat_id," + "cat.name as cat_name"
+					+ " from subcategory sub inner join category cat on cat.id = sub.fk_category"
+					+ " where sub.id=?";
+		
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setLong(1, Long.parseLong(id));
+			ResultSet rs = stmt.executeQuery();
+			SubCategory b = null;
+			if (rs.next()) {
+				b = new SubCategory();
+				
+				b.setId(rs.getString("sub_id"));
+				b.setCode(rs.getString("sub_code"));
+				b.setName(rs.getString("sub_name"));
+				b.setStatus(rs.getInt("sub_status"));
+				b.setCdate(rs.getDate("sub_cdate"));
+				b.setMdate(rs.getDate("sub_mdate"));
+				Category cat = new Category();
+				cat.setId(rs.getString("cat_id"));
+				cat.setName(rs.getString("cat_name"));
+				b.setCategory(cat);
+				
+				rtn.data= b;
+			}
+			
+			rtn.status = ComEnum.ErrorStatus.Success.getCode();
+		} catch (Exception e) {
+			rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+			rtn.message = e.getMessage();
+			e.printStackTrace();
+		}
+		return rtn;
+	}
 
 	public ViewResult<SubCategory> delete(SubCategory data, Connection conn) throws NumberFormatException, Exception {
 		ViewResult<SubCategory> rtn = new ViewResult<>();

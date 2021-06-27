@@ -39,6 +39,34 @@ public class ImageDao {
 		}
 		return rtn;
 	}
+	public ViewResult<ImageData> update(ImageData data,Connection conn) throws Exception {
+		ViewResult<ImageData> rtn = new ViewResult<>();
+		try  {
+
+			String sql = "UPDATE public.image ";
+			PrepareQuery p = new PrepareQuery();
+			
+			p.add("code", data.getCode(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.VARCHAR);
+			p.add("name", data.getName(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.VARCHAR);
+			p.add("status", data.getStatus(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.NUMBER);
+			p.add("def", data.isDefaults(),PrepareQuery.Operator.EQUAL, PrepareQuery.Type.BOOLEAN);
+			p.add("path", data.getPath(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.VARCHAR);
+			p.add("comment", data.getComment(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.VARCHAR);
+			sql += p.createSetStatement();
+			p = new PrepareQuery();  
+			p.add("id", Long.parseLong(data.getId()), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.ID);
+			sql += p.createWhereStatement();
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			if(stmt.executeUpdate() > 0)
+			rtn.status = ComEnum.ErrorStatus.Success.getCode();
+			else rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+		} catch (Exception e) {
+			rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+			rtn.message = e.getMessage();
+			e.printStackTrace();
+		}
+		return rtn;
+	}
 	public ViewResult<ImageData> getAll(ImageData data,Connection conn){
 		ViewResult<ImageData> rtn = new ViewResult<>();
 		try{
@@ -109,6 +137,21 @@ public class ImageDao {
 			q.add("foreign_key", data.getForeignKey(), PrepareQuery.Operator.EQUAL, PrepareQuery.Type.ID);
 			sql += q.createWhereStatement();
 			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.executeUpdate();
+			rtn.status = ComEnum.ErrorStatus.Success.getCode();
+		} catch (Exception e) {
+			rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+			rtn.message = e.getMessage();
+			e.printStackTrace();
+		}
+		return rtn;
+	}
+	public ViewResult<ImageData> deleteById(String id,Connection conn){
+		ViewResult<ImageData> rtn = new ViewResult<>();
+		try{
+			String sql = "delete from image where id=?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setLong(1, Long.parseLong(id));
 			stmt.executeUpdate();
 			rtn.status = ComEnum.ErrorStatus.Success.getCode();
 		} catch (Exception e) {

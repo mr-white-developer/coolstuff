@@ -109,7 +109,6 @@ public class BrandOwnerService implements CrudTemplate<BrandOwner> {
 				for (BrandOwner bo : vr.list) {
 					b = new Brand();
 					b.setBrandOwner(bo);
-					System.out.println(bo.getId());
 					bo.getBrandList().addAll(brandService.getAll(b, crd, conn).list);
 				}
 			}

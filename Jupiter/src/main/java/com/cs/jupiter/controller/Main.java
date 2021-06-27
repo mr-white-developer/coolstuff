@@ -31,14 +31,7 @@ public class Main extends RequestController{
 			HttpServletRequest req,HttpServletResponse resp){
 		return new ViewResult<RequestCredential>() ;
 	}
-	@GetMapping(value = "/test")
-	public ViewCredential test(
-			HttpServletRequest req,HttpServletResponse resp){
-		
-		ViewCredential v = new ViewCredential();
-		v.setN1(Long.toString(KeyFactory.getId()));
-		return v;
-	}
+
 
 
 	

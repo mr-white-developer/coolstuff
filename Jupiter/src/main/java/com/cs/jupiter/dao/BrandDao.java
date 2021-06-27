@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import com.cs.jupiter.model.data.ViewResult;
 import com.cs.jupiter.model.table.Brand;
@@ -15,7 +18,9 @@ import com.cs.jupiter.utility.PrepareQuery;
 
 @Service
 public class BrandDao {
-
+	@Autowired
+	Environment env;
+	
 	public ViewResult<Brand> insert(Brand data, Connection conn) {
 		ViewResult<Brand> rs = new ViewResult<>();
 		try {
@@ -116,6 +121,46 @@ public class BrandDao {
 				b.setBrandOwner(bo);
 
 				rtn.list.add(b);
+			}
+			rtn.status = ComEnum.ErrorStatus.Success.getCode();
+		} catch (Exception e) {
+			rtn.status = ComEnum.ErrorStatus.DatabaseError.getCode();
+			rtn.message = e.getMessage();
+		}
+		return rtn;
+	}
+	public ViewResult<Brand> read(String id, Connection conn) {
+		ViewResult<Brand> rtn = new ViewResult<Brand>();
+		try {
+			String sql = "select row_number() over(order by b.name asc) as row_num," + "count(*) over() as total,"
+					+ "b.id as b_id," + "b.code as b_code," + "b.name as b_name," + "b.status as b_status,"
+					+ "b.cdate as b_cdate," + "b.mdate as b_mdate," + "bo.code as bo_code," + "bo.name as bo_name,"
+					+ "bo.status as bo_status," + "bo.id as bo_id"
+					+ " from brand b inner join brandowner bo on bo.id = b.fk_brandowner where b.id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setLong(1, Long.parseLong(id));
+			CommonUtility.outputLog(sql, env);
+			ResultSet rs = stmt.executeQuery();
+			Brand b = null;
+			if (rs.next()) {
+				b = new Brand();
+				b.setRowNumber(rs.getInt("row_num"));
+				if (rtn.list.size() == 0)
+					rtn.totalItem = rs.getInt("total");
+				b.setId(rs.getString("b_id"));
+				b.setCode(rs.getString("b_code"));
+				b.setName(rs.getString("b_name"));
+				b.setStatus(rs.getInt("b_status"));
+				b.setCdate(rs.getDate("b_cdate"));
+				b.setMdate(rs.getDate("b_mdate"));
+
+				BrandOwner bo = new BrandOwner();
+				bo.setCode(rs.getString("bo_code"));
+				bo.setName(rs.getString("bo_name"));
+				bo.setStatus(rs.getInt("bo_status"));
+				bo.setId(rs.getString("bo_id"));
+				b.setBrandOwner(bo);
+				rtn.data = b;
 			}
 			rtn.status = ComEnum.ErrorStatus.Success.getCode();
 		} catch (Exception e) {

@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import org.springframework.core.env.Environment;
+
+
+
 public class CommonUtility {
 	
 
@@ -46,6 +50,11 @@ public class CommonUtility {
 			return "";
 		}
 
+	}
+	public static void outputLog(String log,Environment env) {
+		if(env.getProperty("debug").equals("1")) {
+			System.out.println(log);
+		}
 	}
 
 }
